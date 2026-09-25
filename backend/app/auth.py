@@ -83,6 +83,13 @@ def register_user(email: str, password: str, full_name: str, confirm_password: O
 def login_user(email: str, password: str) -> Dict[str, Any]:
     email = email.lower().strip()
     user = get_user_by_email(email)
+    
+    # Auto-provision standard demo user on fresh database if needed
+    if email == "rohan@careerlattice.ai" and password == "password123" and not user:
+        pw_hash = hash_password(password)
+        user = create_user(email, pw_hash, "Rohan Sharma")
+        log_event("AUTH", "Auto-provisioned standard demo user Rohan Sharma.")
+
     if not user or not verify_password(password, user["password_hash"]):
         log_event("AUTH", f"Invalid login attempt for {email}")
         raise ValueError("Invalid email or password.")
