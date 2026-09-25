@@ -13,8 +13,21 @@ from backend.app.models import (
 )
 
 # Connect to PostgreSQL or SQLite based on DATABASE_URL
-if DATABASE_URL.startswith("postgresql"):
-    engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=10, max_overflow=20)
+if DATABASE_URL.startswith("postgresql") or DATABASE_URL.startswith("postgres"):
+    pg_url = DATABASE_URL
+    if pg_url.startswith("postgres://"):
+        pg_url = pg_url.replace("postgres://", "postgresql://", 1)
+    
+    # Ensure compatible driver
+    try:
+        engine = create_engine(pg_url, pool_pre_ping=True, pool_size=10, max_overflow=20)
+    except Exception:
+        # Fallback to psycopg2 driver
+        if "postgresql+psycopg2://" not in pg_url:
+            pg_url = pg_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            engine = create_engine(pg_url, pool_pre_ping=True, pool_size=10, max_overflow=20)
+        else:
+            raise
 else:
     # SQLite fallback
     db_path = Path(SQLITE_DB_PATH).resolve()
