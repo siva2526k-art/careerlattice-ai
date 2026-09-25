@@ -163,7 +163,9 @@ def get_user_resume_data(user_id: str) -> Optional[Dict[str, Any]]:
 # ==========================================
 # 4. GITHUB ACCOUNT & REPOSITORIES
 # ==========================================
-def save_user_github(user_id: str, github_handle: str, selected_repos: List[str], evidence_summary: Dict[str, Any]):
+def save_user_github(user_id: str, github_handle: str, selected_repos: List[str], evidence_summary: Optional[Dict[str, Any]] = None):
+    if evidence_summary is None:
+        evidence_summary = {}
     db = SessionLocal()
     try:
         account = db.query(GitHubAccount).filter(GitHubAccount.user_id == user_id).first()
@@ -184,13 +186,15 @@ def save_user_github(user_id: str, github_handle: str, selected_repos: List[str]
         for r_name in selected_repos:
             if r_name in existing_repos:
                 existing_repos[r_name].is_selected = True
+                if evidence_summary and evidence_summary.get("skills_evidence"):
+                    existing_repos[r_name].manifest_findings_json = json.dumps(evidence_summary.get("skills_evidence", {}))
                 existing_repos[r_name].analyzed_at = datetime.now(timezone.utc)
             else:
                 new_repo = GitHubRepository(
                     github_account_id=account.id,
                     repo_name=r_name,
                     is_selected=True,
-                    manifest_findings_json=json.dumps(evidence_summary.get("skills_evidence", {})),
+                    manifest_findings_json=json.dumps(evidence_summary.get("skills_evidence", {}) if evidence_summary else {}),
                     analyzed_at=datetime.now(timezone.utc)
                 )
                 db.add(new_repo)

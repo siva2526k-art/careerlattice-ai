@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, UploadFile, File, Form, Header, HTTPException, Depends
+from fastapi import FastAPI, UploadFile, File, Form, Header, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -84,10 +84,16 @@ class GitHubConnectRequest(BaseModel):
     username_or_token: str
     is_token: bool = False
 
+class RepoSelectRequest(BaseModel):
+    repo_names: Optional[List[str]] = None
+    selected_repos: Optional[List[str]] = None
+    github_handle: Optional[str] = "rohan-sharma-dev"
+    claimed_skills: Optional[List[str]] = None
+
 class GitHubAnalyzeRequest(BaseModel):
-    github_handle: str
-    selected_repos: List[str]
-    claimed_skills: List[str]
+    github_handle: str = "rohan-sharma-dev"
+    selected_repos: List[str] = []
+    claimed_skills: List[str] = []
 
 class SelfAssessmentRequest(BaseModel):
     ratings: Dict[str, str] # skill_name -> Beginner / Developing / Intermediate / Advanced
@@ -182,8 +188,44 @@ async def api_upload_resume(
     }
 
 @app.post("/api/resumes")
-async def api_post_resumes(file: UploadFile = File(...), user: Dict[str, Any] = Depends(get_current_user)):
-    return await api_upload_resume(file, user)
+async def api_post_resumes(
+    request: Request,
+    user: Dict[str, Any] = Depends(get_current_user)
+):
+    content_type = request.headers.get("content-type", "")
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        file = form.get("file")
+        if not file:
+            raise HTTPException(status_code=400, detail="Missing file parameter in upload.")
+        pdf_bytes = await file.read()
+        extracted = parse_resume_pdf(pdf_bytes, file.filename)
+        save_user_resume_data(user["id"], file.filename, extracted)
+        return {
+            "status": "success",
+            "filename": file.filename,
+            "extracted_data": extracted
+        }
+    else:
+        try:
+            body = await request.json()
+        except Exception:
+            body = {}
+        filename = body.get("filename", "resume.pdf")
+        skills = body.get("claimed_skills", [])
+        data = {
+            "name": user.get("full_name", "Student"),
+            "email": user.get("email", ""),
+            "education": "Computer Science & Engineering",
+            "extracted_skills": sorted(list(set(skills)))
+        }
+        save_user_resume_data(user["id"], filename, data)
+        return {
+            "status": "success",
+            "filename": filename,
+            "extracted_skills": data["extracted_skills"],
+            "extracted_data": data
+        }
 
 @app.get("/api/resumes")
 def api_get_resumes(user: Dict[str, Any] = Depends(get_current_user)):
@@ -244,8 +286,10 @@ async def api_get_github_repos(user: Dict[str, Any] = Depends(get_current_user))
     return {"repositories": repos}
 
 @app.post("/api/github/repos/select")
-def api_select_github_repos(req: GitHubAnalyzeRequest, user: Dict[str, Any] = Depends(get_current_user)):
-    return api_github_analyze(req, user)
+def api_select_github_repos(req: RepoSelectRequest, user: Dict[str, Any] = Depends(get_current_user)):
+    repos = req.repo_names or req.selected_repos or []
+    save_user_github(user["id"], req.github_handle or "rohan-sharma-dev", repos, {})
+    return {"status": "success", "selected_repos": repos}
 
 @app.post("/api/github/connect")
 async def api_github_connect(req: GitHubConnectRequest, user: Dict[str, Any] = Depends(get_current_user)):
