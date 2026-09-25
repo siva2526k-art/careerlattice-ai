@@ -1,0 +1,78 @@
+{
+  "skills": {
+    "Python": { "category": "Programming Languages", "tier": "Foundation", "description": "Core Python syntax, data structures, and OOP principles." },
+    "Java": { "category": "Programming Languages", "tier": "Foundation", "description": "Object-oriented programming, JVM ecosystem, and concurrency." },
+    "C++": { "category": "Programming Languages", "tier": "Foundation", "description": "Memory management, pointers, and systems programming." },
+    "JavaScript": { "category": "Programming Languages", "tier": "Foundation", "description": "Async execution, event loop, and web language fundamentals." },
+    "TypeScript": { "category": "Programming Languages", "tier": "Foundation", "description": "Static typing, interfaces, and scalable JavaScript architecture." },
+    "Git": { "category": "Developer Tools", "tier": "Foundation", "description": "Branching, merge conflict resolution, commit history, and PR workflows." },
+    "Linux": { "category": "Systems & OS", "tier": "Foundation", "description": "Shell scripting, POSIX filesystem, process signals, and permissions." },
+    "SQL": { "category": "Databases", "tier": "Foundation", "description": "Relational querying, joins, aggregations, and normalization." },
+    "REST APIs": { "category": "Web Architecture", "tier": "Foundation", "description": "HTTP verbs, status codes, stateless design, and JSON payloads." },
+    "PostgreSQL": { "category": "Databases", "tier": "Intermediate", "description": "ACID compliance, B-tree indexes, connection pooling, and migrations." },
+    "MongoDB": { "category": "Databases", "tier": "Intermediate", "description": "Document data modeling, aggregation pipelines, and indexing." },
+    "FastAPI": { "category": "Frameworks", "tier": "Intermediate", "description": "Asynchronous REST endpoints, dependency injection, and Pydantic validation." },
+    "React": { "category": "Frameworks", "tier": "Intermediate", "description": "Component lifecycle, state hooks, virtual DOM, and SPA routing." },
+    "Docker": { "category": "DevOps & Containers", "tier": "Intermediate", "description": "Container virtualization, multi-stage Dockerfiles, and compose networks." },
+    "Redis": { "category": "Databases & Caching", "tier": "Intermediate", "description": "In-memory key-value caching, TTL strategies, and pub/sub." },
+    "CI/CD": { "category": "DevOps", "tier": "Intermediate", "description": "Automated build, test, and release pipelines using GitHub Actions." },
+    "AWS": { "category": "Cloud Infrastructure", "tier": "Advanced", "description": "Cloud deployment using ECS, RDS, S3, IAM, and VPC networking." },
+    "Kubernetes": { "category": "DevOps & Orchestration", "tier": "Advanced", "description": "Container orchestration, Pod lifecycles, Ingress, and Deployments." }
+  },
+  "prerequisites": [
+    { "from": "Python", "to": "FastAPI" },
+    { "from": "REST APIs", "to": "FastAPI" },
+    { "from": "SQL", "to": "PostgreSQL" },
+    { "from": "Linux", "to": "Docker" },
+    { "from": "Git", "to": "CI/CD" },
+    { "from": "Docker", "to": "AWS" },
+    { "from": "PostgreSQL", "to": "Redis" },
+    { "from": "Docker", "to": "Kubernetes" },
+    { "from": "AWS", "to": "Kubernetes" },
+    { "from": "JavaScript", "to": "TypeScript" },
+    { "from": "JavaScript", "to": "React" },
+    { "from": "FastAPI", "to": "Docker" }
+  ],
+  "roles": {
+    "Junior Backend Developer": {
+      "title": "Junior Backend Developer",
+      "category": "Backend Engineering",
+      "required_skills": ["Python", "FastAPI", "REST APIs", "PostgreSQL", "Git", "Docker", "Linux"],
+      "recommended_skills": ["Redis", "CI/CD", "AWS"],
+      "target_level": "Intermediate",
+      "description": "Designs, implements, and tests resilient server-side APIs, database schemas, and microservice components."
+    },
+    "Python Developer": {
+      "title": "Python Developer",
+      "category": "Software Engineering",
+      "required_skills": ["Python", "Git", "SQL", "REST APIs", "FastAPI"],
+      "recommended_skills": ["PostgreSQL", "Docker", "Linux"],
+      "target_level": "Intermediate",
+      "description": "Develops core application logic, data ingestion pipelines, and RESTful web services in Python."
+    },
+    "Cloud Backend Engineer": {
+      "title": "Cloud Backend Engineer",
+      "category": "Cloud & Distributed Systems",
+      "required_skills": ["Python", "FastAPI", "Docker", "AWS", "PostgreSQL", "CI/CD", "Linux"],
+      "recommended_skills": ["Kubernetes", "Redis"],
+      "target_level": "Advanced",
+      "description": "Builds and scales cloud-native distributed microservices with automated deployment pipelines."
+    },
+    "Full Stack Developer": {
+      "title": "Full Stack Developer",
+      "category": "Web Engineering",
+      "required_skills": ["JavaScript", "TypeScript", "React", "Python", "FastAPI", "SQL", "Git"],
+      "recommended_skills": ["Docker", "PostgreSQL", "REST APIs"],
+      "target_level": "Intermediate",
+      "description": "Builds end-to-end web applications combining responsive client user interfaces with robust backend APIs."
+    },
+    "DevOps Engineer": {
+      "title": "DevOps Engineer",
+      "category": "Infrastructure & Operations",
+      "required_skills": ["Linux", "Git", "Docker", "CI/CD", "AWS", "Kubernetes", "Python"],
+      "recommended_skills": ["PostgreSQL", "REST APIs"],
+      "target_level": "Advanced",
+      "description": "Automates release engineering, container infrastructure, monitoring, and cloud provisioning."
+    }
+  }
+}

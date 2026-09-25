@@ -1,0 +1,69 @@
+{
+  "jobs": [
+    {
+      "id": "job_swiggy_1",
+      "title": "Junior Backend Engineer (Platform)",
+      "company": "Swiggy",
+      "location": "Bangalore, India",
+      "type": "Full-Time",
+      "portal": "LinkedIn / Swiggy Careers",
+      "apply_url": "https://careers.swiggy.com",
+      "required_skills": ["Python", "FastAPI", "PostgreSQL", "Docker", "Git", "REST APIs"],
+      "good_to_have": ["Redis", "AWS"],
+      "description": "Develop high-throughput REST APIs and distributed microservices powering hyper-local delivery logistics.",
+      "min_experience_years": 0
+    },
+    {
+      "id": "job_razorpay_1",
+      "title": "Backend Developer Intern / Associate",
+      "company": "Razorpay",
+      "location": "Bangalore, India (Hybrid)",
+      "type": "Internship / Full-Time",
+      "portal": "Indeed / Razorpay Careers",
+      "apply_url": "https://razorpay.com/jobs",
+      "required_skills": ["Python", "FastAPI", "SQL", "Git", "REST APIs"],
+      "good_to_have": ["Docker", "PostgreSQL"],
+      "description": "Build resilient payment gateway webhook handlers, ledger reconciliation services, and merchant developer SDKs.",
+      "min_experience_years": 0
+    },
+    {
+      "id": "job_ather_1",
+      "title": "Autonomous Vehicle Simulation Intern",
+      "company": "Ather Energy",
+      "location": "Bangalore, India",
+      "type": "Internship",
+      "portal": "LinkedIn / Ather Careers",
+      "apply_url": "https://atherenergy.com/careers",
+      "required_skills": ["Python", "Linux", "Git", "Docker"],
+      "good_to_have": ["AWS", "C++"],
+      "description": "Simulate vehicle telemetry, sensor state estimations, and cloud-connected edge processing algorithms.",
+      "min_experience_years": 0
+    },
+    {
+      "id": "job_zerodha_1",
+      "title": "Systems Backend Engineer (Trading Platform)",
+      "company": "Zerodha (Rainmatter)",
+      "location": "Bangalore, India",
+      "type": "Full-Time",
+      "portal": "Kite Careers",
+      "apply_url": "https://zerodha.com/careers",
+      "required_skills": ["Python", "PostgreSQL", "Linux", "Git", "REST APIs"],
+      "good_to_have": ["Redis", "CI/CD"],
+      "description": "Architect sub-millisecond market data ingestion pipelines and order management backends with PostgreSQL.",
+      "min_experience_years": 1
+    },
+    {
+      "id": "job_cred_1",
+      "title": "Cloud Backend Engineer (Payments)",
+      "company": "CRED",
+      "location": "Bangalore, India",
+      "type": "Full-Time",
+      "portal": "LinkedIn / CRED Careers",
+      "apply_url": "https://cred.club/careers",
+      "required_skills": ["Python", "FastAPI", "Docker", "AWS", "PostgreSQL", "CI/CD"],
+      "good_to_have": ["Kubernetes", "Redis"],
+      "description": "Own critical rewards settlement and credit line disbursement microservices on AWS containerized infrastructure.",
+      "min_experience_years": 1
+    }
+  ]
+}

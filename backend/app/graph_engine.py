@@ -1,102 +1,143 @@
+import json
 import networkx as nx
+from typing import Dict, Any, List, Set, Optional
+from pathlib import Path
+from backend.app.config import log_event
 
-def build_backend_prerequisite_dag():
+DATA_DIR = Path(__file__).resolve().parent / "data"
+
+def load_roles_and_skills():
+    with open(DATA_DIR / "roles_and_skills.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def load_verified_resources():
+    with open(DATA_DIR / "verified_resources.json", "r", encoding="utf-8") as f:
+        return json.load(f).get("resources", {})
+
+def build_prerequisite_graph() -> nx.DiGraph:
+    """Constructs the canonical prerequisite DAG using NetworkX."""
+    data = load_roles_and_skills()
     G = nx.DiGraph()
-
-    # Define nodes with metadata
-    nodes = {
-        "python_basics": {"title": "Python Syntax & OOP", "tier": "Foundation", "cleared": True},
-        "git_core": {"title": "Git & Version Control", "tier": "Foundation", "cleared": True},
-        "sql_basics": {"title": "Relational Databases & SQL", "tier": "Foundation", "cleared": True},
-        "rest_api": {"title": "REST API Architecture", "tier": "Foundation", "cleared": True},
-        "fastapi_core": {"title": "FastAPI Framework & Pydantic", "tier": "Framework", "cleared": True},
-        "async_io": {"title": "Asynchronous I/O (asyncio)", "tier": "Core Backend", "cleared": True},
-        "docker_basics": {"title": "Docker Containers & Images", "tier": "DevOps", "cleared": False, "active": True},
-        "docker_compose": {"title": "Docker Compose Multi-Service", "tier": "DevOps", "cleared": False},
-        "redis_cache": {"title": "Redis In-Memory Caching", "tier": "Optimization", "cleared": False},
-        "aws_fundamentals": {"title": "AWS Cloud Deployment (ECS/RDS)", "tier": "Cloud", "cleared": False},
-        "ci_cd": {"title": "CI/CD Automation (GitHub Actions)", "tier": "DevOps", "cleared": False},
-        "k8s_orchestration": {"title": "Kubernetes Microservices", "tier": "Advanced", "cleared": False}
-    }
-
-    for nid, data in nodes.items():
-        G.add_node(nid, **data)
-
-    # Define prerequisite edges: A -> B means A is prerequisite of B
-    edges = [
-        ("python_basics", "fastapi_core"),
-        ("rest_api", "fastapi_core"),
-        ("python_basics", "async_io"),
-        ("sql_basics", "redis_cache"),
-        ("docker_basics", "docker_compose"),
-        ("docker_compose", "aws_fundamentals"),
-        ("async_io", "redis_cache"),
-        ("docker_compose", "k8s_orchestration"),
-        ("aws_fundamentals", "k8s_orchestration"),
-        ("git_core", "ci_cd"),
-        ("ci_cd", "aws_fundamentals")
-    ]
-
-    G.add_edges_from(edges)
+    
+    # Add all skill nodes with tier & category metadata
+    for skill_name, meta in data.get("skills", {}).items():
+        G.add_node(skill_name, **meta)
+        
+    # Add directed prerequisite edges: A -> B means A is prerequisite of B
+    for edge in data.get("prerequisites", []):
+        G.add_edge(edge["from"], edge["to"])
+        
     return G
 
-def generate_user_roadmap(verified_skills: dict, capstone_completed: bool = False):
+def generate_personalized_roadmap(
+    target_role: str,
+    verified_skills: List[str], # Skills with status == 'VERIFIED'
+    partial_skills: List[str]   # Skills with status == 'PARTIAL'
+) -> Dict[str, Any]:
     """
-    Computes node states (green/amber/grey) and Kahn's topological sort order.
-    """
-    G = build_backend_prerequisite_dag()
+    Generates a personalized, prerequisite-aware learning roadmap for the target role.
     
-    # Check if Docker/AWS was cleared
-    docker_verified = capstone_completed or (verified_skills.get("Docker", {}).get("confidence", 0) >= 0.8)
-    aws_verified = capstone_completed or (verified_skills.get("AWS", {}).get("confidence", 0) >= 0.8)
+    Key Principles:
+    1. If the student ALREADY demonstrates a skill, do NOT force them to repeat it!
+    2. Start the roadmap from unmastered prerequisite ancestors.
+    3. Order nodes using Kahn's Topological Sorting algorithm (zero cyclical deadlocks).
+    4. Attach curated, accredited public learning resources (NPTEL, SWAYAM, Docs).
+    """
+    log_event("ROADMAP", f"Generating personalized roadmap for role: '{target_role}' (verified: {len(verified_skills)}, partial: {len(partial_skills)})")
+    
+    roles_data = load_roles_and_skills()
+    resources_data = load_verified_resources()
+    
+    role_info = roles_data.get("roles", {}).get(target_role)
+    if not role_info:
+        # Fallback to Junior Backend Developer if role not found
+        target_role = "Junior Backend Developer"
+        role_info = roles_data["roles"]["Junior Backend Developer"]
+        
+    required_skills = set(role_info["required_skills"])
+    recommended_skills = set(role_info.get("recommended_skills", []))
+    all_target_skills = required_skills | recommended_skills
+    
+    G = build_prerequisite_graph()
+    
+    # 1. Expand target skill set with all required prerequisite ancestors
+    needed_skills: Set[str] = set()
+    for s in all_target_skills:
+        needed_skills.add(s)
+        if s in G:
+            ancestors = nx.ancestors(G, s)
+            needed_skills.update(ancestors)
 
-    roadmap_nodes = [
-        {
-            "id": "python_core",
-            "title": "Python Syntax & Asyncio",
-            "tier": "Foundation",
-            "status": "cleared",
-            "badge": "🟢 Mastered (Code Verified)",
-            "details": "Verified via GitHub AST imports."
-        },
-        {
-            "id": "fastapi_core",
-            "title": "FastAPI & PostgreSQL ORM",
-            "tier": "Framework",
-            "status": "cleared",
-            "badge": "🟢 Mastered (Code Verified)",
-            "details": "FastAPI routes and SQLAlchemy models detected."
-        },
-        {
-            "id": "docker_bridge",
-            "title": "Docker Containers & Networking",
-            "tier": "Active Prerequisite",
-            "status": "cleared" if docker_verified else "active",
-            "badge": "🟢 Mastered via Capstone" if docker_verified else "🟡 Learn Next (Active Gap)",
-            "details": "Container port bridges, Dockerfile multi-stage builds.",
-            "nptel_module": "NPTEL / IIT Kharagpur: Cloud Computing & Containers (Module 3)",
-            "docs_url": "https://docs.docker.com/get-started/"
-        },
-        {
-            "id": "aws_cloud",
-            "title": "AWS Cloud Deployment (ECS & RDS)",
-            "tier": "Cloud Target",
-            "status": "cleared" if aws_verified else ("active" if docker_verified else "locked"),
-            "badge": "🟢 Mastered via Capstone" if aws_verified else ("🟡 Learn Next" if docker_verified else "⚪ Locked Goal"),
-            "details": "IAM execution roles, ECS container tasks, and RDS connection pools.",
-            "nptel_module": "NPTEL / IIT Madras: Distributed Systems & Cloud Infrastructure",
-            "docs_url": "https://aws.amazon.com/getting-started/"
-        },
-        {
-            "id": "k8s_microservices",
-            "title": "Kubernetes Microservices Architecture",
-            "tier": "Industry Goal",
-            "status": "cleared" if (docker_verified and aws_verified) else "locked",
-            "badge": "🟢 Demonstrated" if (docker_verified and aws_verified) else "⚪ Locked Goal",
-            "details": "Deployments, Services, Ingress Controllers, and Pod Scaling.",
-            "nptel_module": "NPTEL: Advanced Cloud Systems",
-            "docs_url": "https://kubernetes.io/docs/tutorials/"
-        }
-    ]
+    # 2. Extract induced subgraph for the role
+    subgraph_nodes = [s for s in needed_skills if s in G]
+    subgraph = G.subgraph(subgraph_nodes).copy()
+    
+    # 3. Apply Kahn's Topological Sort to get canonical linear sequence
+    try:
+        ordered_sequence = list(nx.topological_sort(subgraph))
+    except nx.NetworkXUnfeasible:
+        # If cycles occur, fall back to simple node list
+        ordered_sequence = list(subgraph.nodes())
 
-    return roadmap_nodes
+    # 4. Classify node states:
+    # - 'demonstrated' (Green): verified in student's code/assessment
+    # - 'active_gap' (Amber): missing prerequisite or partial skill ready to learn
+    # - 'locked' (Grey): advanced goal whose prerequisites are not yet cleared
+    
+    cleared_set = set(verified_skills)
+    partial_set = set(partial_skills)
+    
+    roadmap_nodes = []
+    first_active_found = False
+    
+    for skill in ordered_sequence:
+        meta = G.nodes[skill]
+        res_list = resources_data.get(skill, [
+            {"title": f"{skill} Official Guide & Documentation", "provider": "Official Documentation", "url": "https://devdocs.io", "difficulty": "Intermediate", "type": "Documentation"}
+        ])
+        
+        prereqs = list(G.predecessors(skill))
+        prereqs_cleared = all((p in cleared_set) for p in prereqs)
+        
+        if skill in cleared_set:
+            status = "demonstrated"
+            badge = "🟢 Demonstrated / Mastered"
+            action_text = "Mastered: Skill proven in repository implementation."
+        elif prereqs_cleared:
+            status = "active_gap"
+            badge = "🟡 Active Prerequisite (Learn Next)" if not (skill in partial_set) else "🟡 In Progress (Partial Evidence)"
+            action_text = f"Build and commit a practical project to achieve full verification."
+            first_active_found = True
+        else:
+            status = "locked"
+            badge = "⚪ Locked Goal"
+            action_text = f"Complete prerequisites first: {', '.join([p for p in prereqs if p not in cleared_set])}."
+            
+        roadmap_nodes.append({
+            "id": skill.lower().replace(" ", "_").replace("+", "p").replace("/", "_"),
+            "skill_name": skill,
+            "category": meta.get("category", "General"),
+            "tier": meta.get("tier", "Core"),
+            "status": status,
+            "badge": badge,
+            "prerequisites": prereqs,
+            "action_text": action_text,
+            "resources": res_list,
+            "capstone_task": {
+                "title": f"Production Implementation: {skill}",
+                "build": f"Implement a containerized module or test suite showcasing {skill}.",
+                "prove": "Commit and push your implementation to your GitHub repository.",
+                "rescan": "Click 'Update My Evidence' to rescan and auto-clear this node."
+            }
+        })
+        
+    return {
+        "target_role": target_role,
+        "role_description": role_info["description"],
+        "target_level": role_info["target_level"],
+        "total_nodes": len(roadmap_nodes),
+        "cleared_count": len([n for n in roadmap_nodes if n["status"] == "demonstrated"]),
+        "active_count": len([n for n in roadmap_nodes if n["status"] == "active_gap"]),
+        "locked_count": len([n for n in roadmap_nodes if n["status"] == "locked"]),
+        "nodes": roadmap_nodes
+    }

@@ -1,0 +1,48 @@
+{
+  "resources": {
+    "Python": [
+      { "title": "Programming, Data Structures and Algorithms Using Python", "provider": "NPTEL / IIT Madras", "url": "https://nptel.ac.in/courses/106106145", "difficulty": "Foundation", "type": "Course" },
+      { "title": "The Python Tutorial & Standard Library", "provider": "Official Documentation", "url": "https://docs.python.org/3/tutorial/", "difficulty": "Foundation", "type": "Documentation" }
+    ],
+    "FastAPI": [
+      { "title": "FastAPI Tutorial - User Guide", "provider": "Official Documentation", "url": "https://fastapi.tiangolo.com/tutorial/", "difficulty": "Intermediate", "type": "Documentation" },
+      { "title": "Developing RESTful APIs with Python and Asynchronous Execution", "provider": "SWAYAM / IIT Roorkee", "url": "https://swayam.gov.in/explorer", "difficulty": "Intermediate", "type": "Course" }
+    ],
+    "Docker": [
+      { "title": "Cloud Computing: Virtualization & Containers (Module 3)", "provider": "NPTEL / IIT Kharagpur", "url": "https://nptel.ac.in/courses/106105167", "difficulty": "Intermediate", "type": "Course" },
+      { "title": "Docker Orientation and Container Architecture Guide", "provider": "Official Documentation", "url": "https://docs.docker.com/get-started/", "difficulty": "Intermediate", "type": "Documentation" }
+    ],
+    "PostgreSQL": [
+      { "title": "Database Management Systems: Indexing & Query Tuning", "provider": "NPTEL / IIT Madras", "url": "https://nptel.ac.in/courses/106106093", "difficulty": "Intermediate", "type": "Course" },
+      { "title": "PostgreSQL Official Documentation: Indexes and Performance", "provider": "Official Documentation", "url": "https://www.postgresql.org/docs/current/indexes.html", "difficulty": "Intermediate", "type": "Documentation" }
+    ],
+    "Linux": [
+      { "title": "Introduction to Operating Systems & POSIX Shell", "provider": "MIT OpenCourseWare (6.004)", "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/", "difficulty": "Foundation", "type": "Course" },
+      { "title": "The Linux Command Line & System Architecture Guide", "provider": "Official Linux Documentation", "url": "https://www.kernel.org/doc/html/latest/", "difficulty": "Foundation", "type": "Documentation" }
+    ],
+    "AWS": [
+      { "title": "Distributed Systems & Cloud Architecture (Cloud Infrastructure)", "provider": "NPTEL / IIT Madras", "url": "https://nptel.ac.in/courses/106106168", "difficulty": "Advanced", "type": "Course" },
+      { "title": "AWS Cloud Foundations and ECS Deployment Architecture", "provider": "Official Documentation", "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html", "difficulty": "Advanced", "type": "Documentation" }
+    ],
+    "Kubernetes": [
+      { "title": "Container Orchestration & Microservices Engineering", "provider": "NPTEL / IIT Bombay", "url": "https://nptel.ac.in/courses/106101061", "difficulty": "Advanced", "type": "Course" },
+      { "title": "Kubernetes Concepts: Pods, Deployments, and Services", "provider": "Official Documentation", "url": "https://kubernetes.io/docs/concepts/", "difficulty": "Advanced", "type": "Documentation" }
+    ],
+    "Git": [
+      { "title": "Version Control with Git & Distributed Team Workflows", "provider": "SWAYAM / NPTEL", "url": "https://swayam.gov.in/explorer", "difficulty": "Foundation", "type": "Course" },
+      { "title": "Pro Git Book & Official Reference Manual", "provider": "Official Documentation", "url": "https://git-scm.com/book/en/v2", "difficulty": "Foundation", "type": "Documentation" }
+    ],
+    "REST APIs": [
+      { "title": "Architectural Styles and the Design of Network-based Software Architectures", "provider": "ACM / MIT OpenCourseWare", "url": "https://ocw.mit.edu/", "difficulty": "Foundation", "type": "Reference" },
+      { "title": "MDN Web Docs: HTTP Overview & RESTful Methods", "provider": "Mozilla Developer Network", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods", "difficulty": "Foundation", "type": "Documentation" }
+    ],
+    "CI/CD": [
+      { "title": "Software Engineering & Continuous Delivery Practices", "provider": "NPTEL / IIT Delhi", "url": "https://nptel.ac.in/courses/106102061", "difficulty": "Intermediate", "type": "Course" },
+      { "title": "GitHub Actions Documentation: Workflow Syntax & Automated Testing", "provider": "Official Documentation", "url": "https://docs.github.com/en/actions", "difficulty": "Intermediate", "type": "Documentation" }
+    ],
+    "Redis": [
+      { "title": "High Performance Caching and In-Memory Data Structures", "provider": "Official Documentation", "url": "https://redis.io/docs/latest/develop/data-types/", "difficulty": "Intermediate", "type": "Documentation" },
+      { "title": "Modern Distributed Caching & Storage Architectures", "provider": "MIT OpenCourseWare", "url": "https://ocw.mit.edu/", "difficulty": "Intermediate", "type": "Course" }
+    ]
+  }
+}

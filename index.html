@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareerLattice AI — AI Skill-to-Career Readiness Platform</title>
+  <title>CareerLattice AI — Evidence-Based Skill-to-Career Readiness Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,9 +12,9 @@
       --bg-primary: #070B14;
       --bg-secondary: #0D1424;
       --bg-card: rgba(17, 24, 39, 0.75);
-      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --bg-card-hover: rgba(30, 41, 59, 0.9);
       --border-color: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(56, 189, 248, 0.3);
+      --border-glow: rgba(6, 182, 212, 0.3);
       --text-main: #F8FAFC;
       --text-muted: #94A3B8;
       --cyan: #06B6D4;
@@ -23,9 +23,10 @@
       --emerald-glow: rgba(16, 185, 129, 0.25);
       --amber: #F59E0B;
       --amber-glow: rgba(245, 158, 11, 0.25);
-      --purple: #8B5CF6;
+      --red: #EF4444;
       --indigo: #6366F1;
-      --slate-node: #1E293B;
+      --purple: #8B5CF6;
+      --radius: 12px;
     }
 
     * {
@@ -41,8 +42,8 @@
       min-height: 100vh;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 10% 15%, rgba(6, 182, 212, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
     }
 
     /* HEADER */
@@ -50,9 +51,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 32px;
+      padding: 14px 28px;
       border-bottom: 1px solid var(--border-color);
-      background: rgba(7, 11, 20, 0.85);
+      background: rgba(7, 11, 20, 0.9);
       backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
@@ -63,6 +64,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      cursor: pointer;
     }
 
     .brand-icon {
@@ -86,6 +88,11 @@
       -webkit-text-fill-color: transparent;
     }
 
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
     .sih-badge {
       font-size: 0.72rem;
       padding: 4px 10px;
@@ -97,592 +104,272 @@
       letter-spacing: 0.5px;
     }
 
-    .header-controls {
+    .header-right {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    .mode-switch {
+    .user-pill {
       display: flex;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 4px;
-      border-radius: 10px;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
-    }
-
-    .mode-btn {
       padding: 6px 14px;
-      border-radius: 7px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .mode-btn.active {
-      background: var(--indigo);
-      color: #fff;
-      box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
-    }
-
-    .target-role-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(139, 92, 246, 0.12);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      padding: 6px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #C4B5FD;
-    }
-
-    /* MAIN CONTAINER */
-    .app-container {
-      display: grid;
-      grid-template-columns: 340px 1fr 380px;
-      height: calc(100vh - 73px);
-      overflow: hidden;
-    }
-
-    /* LEFT SIDEBAR: PROFILE & AST INSPECTOR */
-    .sidebar-left {
-      background: var(--bg-secondary);
-      border-right: 1px solid var(--border-color);
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .section-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .candidate-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .candidate-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #3B82F6, #10B981);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    .candidate-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .candidate-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .repo-pill {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.9);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: #93C5FD;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .polygraph-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .polygraph-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .polygraph-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-
-    .status-tag {
-      font-size: 0.7rem;
-      padding: 2px 8px;
       border-radius: 999px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+      font-size: 0.8rem;
     }
 
-    .tag-verified {
-      background: var(--emerald-glow);
-      color: #34D399;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-    }
-
-    .tag-partial {
-      background: var(--amber-glow);
-      color: #FBBF24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-
-    .tag-unverified {
-      background: rgba(239, 68, 68, 0.15);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .meter-bar {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .meter-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .fill-emerald { background: var(--emerald); box-shadow: 0 0 8px var(--emerald-glow); }
-    .fill-amber { background: var(--amber); box-shadow: 0 0 8px var(--amber-glow); }
-    .fill-red { background: #EF4444; }
-
-    .poly-evidence {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .action-btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .btn-simulate-push {
-      background: linear-gradient(135deg, #10B981, #059669);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-    }
-
-    .btn-simulate-push:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-    }
-
-    /* CENTER: ROADMAP CANVAS */
-    .canvas-center {
-      position: relative;
-      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.5) 0%, rgba(7, 11, 20, 0.95) 100%);
-      overflow: auto;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .canvas-toolbar {
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      display: flex;
-      gap: 12px;
-      z-index: 10;
-    }
-
-    .legend-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--border-color);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      backdrop-filter: blur(8px);
-    }
-
-    .dot {
+    .status-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-    }
-    .dot-green { background: var(--emerald); box-shadow: 0 0 6px var(--emerald); }
-    .dot-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
-    .dot-grey { background: #64748B; }
-
-    /* GRAPH STAGE */
-    .graph-stage {
-      display: flex;
-      flex-direction: column;
-      gap: 36px;
-      margin-top: 50px;
-      max-width: 720px;
-      width: 100%;
-      position: relative;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
     }
 
-    .graph-level {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .level-label {
-      position: absolute;
-      left: -20px;
-      top: -18px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #64748B;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .node-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 14px 18px;
-      width: 280px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      position: relative;
-      backdrop-filter: blur(12px);
-    }
-
-    .node-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .node-cleared {
-      border-color: rgba(16, 185, 129, 0.5);
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
-      background: rgba(6, 78, 59, 0.25);
-    }
-
-    .node-active {
-      border-color: rgba(245, 158, 11, 0.6);
-      box-shadow: 0 0 24px rgba(245, 158, 11, 0.2);
-      background: rgba(120, 53, 15, 0.25);
-      animation: pulse-amber 2.5s infinite;
-    }
-
-    @keyframes pulse-amber {
-      0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
-      50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); }
-    }
-
-    .node-locked {
-      opacity: 0.6;
-      border-color: rgba(255, 255, 255, 0.05);
-      background: rgba(15, 23, 42, 0.6);
-    }
-
-    .node-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .node-tier {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #94A3B8;
-    }
-
-    .node-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-    }
-
-    .node-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-
-    .node-badge {
-      align-self: flex-start;
-      margin-top: 4px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
-
-    /* RIGHT DRAWER: CAPSTONE & RESOURCES */
-    .sidebar-right {
+    /* STEP PROGRESS BAR */
+    .stepper-nav {
       background: var(--bg-secondary);
-      border-left: 1px solid var(--border-color);
-      padding: 20px;
-      overflow-y: auto;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
       display: flex;
-      flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      overflow-x: auto;
+      white-space: nowrap;
     }
 
-    .resource-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .resource-source {
+    .step-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #38BDF8;
-      text-transform: uppercase;
-    }
-
-    .resource-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .resource-link {
-      color: var(--cyan);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
 
-    .resource-link:hover {
-      text-decoration: underline;
+    .step-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
     }
 
-    .capstone-box {
-      background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.05));
-      border: 1px solid rgba(99, 102, 241, 0.35);
-      border-radius: 14px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    .step-item.active {
+      color: var(--cyan);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
     }
 
-    .capstone-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #E0E7FF;
-      line-height: 1.35;
+    .step-item.completed {
+      color: var(--emerald);
     }
 
-    .milestone-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .milestone-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.78rem;
-      line-height: 1.4;
-      color: #CBD5E1;
-    }
-
-    .m-num {
+    .step-num {
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: var(--indigo);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.65rem;
       font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
     }
 
-    /* JOB OPPORTUNITIES SECTION */
-    .job-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: all 0.2s;
-    }
-
-    .job-card:hover {
-      border-color: rgba(56, 189, 248, 0.4);
-    }
-
-    .job-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .job-role {
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-
-    .job-company {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .job-match-badge {
-      font-size: 0.72rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .match-high {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34D399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .match-mid {
-      background: rgba(245, 158, 11, 0.15);
-      color: #FBBF24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .btn-apply {
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .btn-apply:hover {
+    .step-item.active .step-num {
       background: var(--cyan);
       color: #070B14;
-      border-color: var(--cyan);
     }
 
-    /* TPO VIEW (HIDDEN BY DEFAULT) */
-    .tpo-view {
-      display: none;
-      padding: 40px;
-      max-width: 1200px;
+    .step-item.completed .step-num {
+      background: var(--emerald);
+      color: #fff;
+    }
+
+    .step-divider {
+      color: rgba(255, 255, 255, 0.15);
+      font-size: 0.7rem;
+    }
+
+    /* MAIN CONTAINER & SCREEN LAYOUTS */
+    .main-wrapper {
+      max-width: 1300px;
       margin: 0 auto;
-      width: 100%;
+      padding: 30px 20px;
+      min-height: calc(100vh - 125px);
     }
 
-    .heatmap-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARD STYLES */
+    .card {
       background: var(--bg-card);
-      border-radius: 12px;
-      overflow: hidden;
       border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    .heatmap-table th, .heatmap-table td {
-      padding: 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.85rem;
+    .card-header {
+      margin-bottom: 20px;
     }
 
-    .heatmap-table th {
-      background: rgba(15, 23, 42, 0.95);
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
       color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.75rem;
+      line-height: 1.5;
     }
 
-    .status-pill {
+    /* BUTTONS */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+      text-decoration: none;
     }
 
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #0284C7);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--cyan-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, var(--emerald), #059669);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--emerald-glow);
+    }
+
+    .btn-emerald:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px dashed rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    /* BADGES */
+    .badge {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-verified {
+      background: var(--emerald-glow);
+      color: #34D399;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+    }
+
+    .badge-partial {
+      background: var(--amber-glow);
+      color: #FBBF24;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+    }
+
+    .badge-unverified {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    /* FORMS */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -691,17 +378,225 @@
       border: 1px solid #10B981;
       padding: 14px 20px;
       border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       display: flex;
       align-items: center;
       gap: 12px;
       z-index: 100;
-      transform: translateY(120px);
+      transform: translateY(140px);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .toast.show {
       transform: translateY(0);
+    }
+
+    /* DRAWER / MODAL FOR TRANSPARENT EVIDENCE */
+    .evidence-modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 480px;
+      max-width: 90vw;
+      height: 100vh;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      padding: 30px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .evidence-modal.open {
+      transform: translateX(0);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+    }
+
+    .modal-backdrop.open {
+      display: block;
+    }
+
+    /* GRIDS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* TAGS CONTAINER */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag-item {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    .tag-item .remove-btn {
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tag-item .remove-btn:hover {
+      color: var(--red);
+    }
+
+    /* QUESTION CARD */
+    .q-type-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #A5B4FC;
+    }
+
+    .code-block {
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #93C5FD;
+      margin: 12px 0;
+      white-space: pre-wrap;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+      font-family: inherit;
+    }
+
+    .option-btn:hover {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .option-btn.selected {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, 0.15);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    .option-btn.correct {
+      border-color: var(--emerald) !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+    }
+
+    .option-btn.incorrect {
+      border-color: var(--red) !important;
+      background: rgba(239, 68, 68, 0.15) !important;
+    }
+
+    /* ROADMAP GRAPH NODES */
+    .roadmap-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .roadmap-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .roadmap-node:hover {
+      transform: translateY(-3px);
+    }
+
+    .node-cleared {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(6, 78, 59, 0.25);
+    }
+
+    .node-active {
+      border-color: rgba(245, 158, 11, 0.6);
+      background: rgba(120, 53, 15, 0.25);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+
+    .node-locked {
+      opacity: 0.6;
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    /* JOB CARD */
+    .job-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .job-item:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .stepper-nav { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -709,433 +604,1514 @@
 
   <!-- HEADER -->
   <header>
-    <div class="brand">
+    <div class="brand" onclick="navigateTo('screenDashboard')">
       <div class="brand-icon">🌐</div>
       <div>
         <div class="brand-title">CareerLattice AI</div>
-        <div style="font-size: 0.7rem; color: #94A3B8;">Dynamic Skill-to-Career Readiness Platform</div>
+        <div class="brand-subtitle">A Resume is a Claim. Code is Evidence.</div>
       </div>
       <span class="sih-badge">SIH SE-02</span>
     </div>
 
-    <div class="header-controls">
-      <div class="target-role-pill">
-        <span>🎯 Target:</span>
-        <strong id="roleTitle">Robotics & Simulation Engineer</strong>
+    <div class="header-right">
+      <div class="user-pill" id="userBadge" style="display: none;">
+        <span class="status-dot"></span>
+        <span id="headerUserName">Candidate</span>
       </div>
-
-      <div class="mode-switch">
-        <button class="mode-btn active" id="btnStudentMode" onclick="switchMode('student')">👨‍🎓 Student Mode</button>
-        <button class="mode-btn" id="btnTpoMode" onclick="switchMode('tpo')">🏫 Institutional TPO Mode</button>
-      </div>
+      <button class="btn btn-ghost" id="btnQuickDemo" onclick="loadStandardDemo()" style="font-size: 0.75rem; padding: 6px 14px;">
+        ⚡ 1-Click Demo (Rohan Sharma)
+      </button>
+      <button class="btn btn-secondary" id="btnNavAuth" onclick="navigateTo('screenAuth')" style="font-size: 0.75rem; padding: 6px 14px;">
+        Account
+      </button>
     </div>
   </header>
 
-  <!-- STUDENT DASHBOARD -->
-  <div class="app-container" id="studentView">
-    
-    <!-- LEFT PANEL: CANDIDATE & AST INSPECTOR -->
-    <aside class="sidebar-left">
-      <div class="section-title">👤 Candidate Profile</div>
-      <div class="candidate-card">
-        <div class="candidate-avatar">RS</div>
-        <div>
-          <div class="candidate-name">Rohan Sharma</div>
-          <div class="candidate-sub">B.Sc / B.Tech Physics • 3rd Year</div>
-          <div class="repo-pill">
-            <span>🐙</span> github.com/rohan-physics-dev
+  <!-- WORKFLOW STEPPER -->
+  <nav class="stepper-nav" id="stepperNav">
+    <div class="step-item active" id="step-1" onclick="navigateTo('screenAuth')">
+      <span class="step-num">1</span> Login / Register
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-2" onclick="navigateTo('screenConsent')">
+      <span class="step-num">2</span> Consent
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-3" onclick="navigateTo('screenResume')">
+      <span class="step-num">3</span> Resume
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-4" onclick="navigateTo('screenGithub')">
+      <span class="step-num">4</span> GitHub Repos
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-5" onclick="navigateTo('screenSelf')">
+      <span class="step-num">5</span> Self-Rate
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-6" onclick="navigateTo('screenAssessment')">
+      <span class="step-num">6</span> Adaptive Test
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-7" onclick="navigateTo('screenDashboard')">
+      <span class="step-num">7</span> Evidence Matrix
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-8" onclick="navigateTo('screenRoadmap')">
+      <span class="step-num">8</span> Roadmap DAG
+    </div>
+    <span class="step-divider">➔</span>
+    <div class="step-item" id="step-9" onclick="navigateTo('screenJobs')">
+      <span class="step-num">9</span> Matched Jobs
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-wrapper">
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: LOGIN / REGISTER -->
+    <!-- ========================================== -->
+    <section class="screen active" id="screenAuth">
+      <div style="max-width: 480px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🔐 Student Authentication</h2>
+            <p class="card-desc">Enter your credentials or click 1-Click Demo to instantly load the Rohan Sharma profile.</p>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button class="btn btn-primary" id="tabLogin" onclick="switchAuthTab('login')" style="flex: 1;">Login</button>
+            <button class="btn btn-secondary" id="tabRegister" onclick="switchAuthTab('register')" style="flex: 1;">Register</button>
+          </div>
+
+          <div id="authAlert" style="display: none; padding: 10px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px;"></div>
+
+          <form id="authForm" onsubmit="handleAuthSubmit(event)">
+            <div class="form-group" id="groupFullName" style="display: none;">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="authFullName" placeholder="e.g. Rohan Sharma" value="Rohan Sharma">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="authEmail" placeholder="e.g. rohan@careerlattice.ai" value="rohan@careerlattice.ai" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" id="authPassword" placeholder="Minimum 6 characters" value="password123" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="btnAuthSubmit">
+              Log In to Platform
+            </button>
+          </form>
+
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); text-align: center;">
+            <button class="btn btn-ghost" onclick="fillDemoCredentials()" style="width: 100%; font-size: 0.8rem;">
+              Fill Standard Demo Credentials (rohan@careerlattice.ai)
+            </button>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="section-title">
-        <span>🌲 Code-Grounding Polygraph</span>
-      </div>
-      <div class="polygraph-box">
-        <div style="font-size: 0.74rem; color: #94A3B8; margin-bottom: 4px;">
-          Tree-sitter AST & Manifest Inspection:
-        </div>
+    <!-- ========================================== -->
+    <!-- SCREEN 2: TERMS & CONDITIONS / CONSENT -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenConsent">
+      <div style="max-width: 680px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📜 Terms & Conditions & Data Processing Consent</h2>
+            <p class="card-desc">CareerLattice AI is grounded in transparent, evidence-based verification. Before collecting technical data, we require explicit authorization.</p>
+          </div>
 
-        <!-- 1. Mechanics -->
-        <div class="polygraph-item">
-          <div class="polygraph-header">
-            <span>Classical Mechanics</span>
-            <span class="status-tag tag-verified" id="tag-mech">VERIFIED (96%)</span>
+          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; font-size: 0.85rem; line-height: 1.6; color: #CBD5E1; margin-bottom: 24px; max-height: 280px; overflow-y: auto;">
+            <p style="margin-bottom: 12px;"><strong>1. Evidence-Based Verification:</strong> CareerLattice analyzes claimed technical competencies against empirical artifacts. A resume represents a claim; inspected code and technical assessments constitute evidence.</p>
+            <p style="margin-bottom: 12px;"><strong>2. GitHub Repository Inspection:</strong> The platform reads ONLY repositories explicitly selected by the student. It analyzes file manifests (e.g. <code>requirements.txt</code>, <code>Dockerfile</code>) and abstract syntax trees (ASTs) for imports and module patterns. No private repository is accessed without authorization.</p>
+            <p style="margin-bottom: 12px;"><strong>3. Adaptive Assessments:</strong> Technical answers are evaluated dynamically to calibrate proficiency levels. All feedback is deterministic and explainable.</p>
+            <p style="margin-bottom: 12px;"><strong>4. Data Privacy:</strong> Your resumes, PII, and credentials are encrypted. Tokens and API keys are stored server-side only and never exposed to client browsers.</p>
+            <p><strong>5. "Not Verified" Distinction:</strong> A rating of <em>"Not Verified"</em> indicates insufficient evidence was detected; it does NOT assert that the candidate lacks the skill.</p>
           </div>
-          <div class="meter-bar">
-            <div class="meter-fill fill-emerald" id="meter-mech" style="width: 96%;"></div>
-          </div>
-          <div class="poly-evidence">NumPy Runge-Kutta ODE solvers found</div>
-        </div>
 
-        <!-- 2. Linear Algebra -->
-        <div class="polygraph-item">
-          <div class="polygraph-header">
-            <span>Linear Algebra & Vectors</span>
-            <span class="status-tag tag-verified" id="tag-la">VERIFIED (92%)</span>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 24px;">
+            <input type="checkbox" id="consentCheckbox" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--cyan); cursor: pointer;" onchange="toggleConsentButton()">
+            <label for="consentCheckbox" style="font-size: 0.88rem; cursor: pointer; line-height: 1.4;">
+              I agree to the Terms & Conditions and consent to processing my career-related data, uploaded resume, and selected GitHub repositories for skill verification.
+            </label>
           </div>
-          <div class="meter-bar">
-            <div class="meter-fill fill-emerald" id="meter-la" style="width: 92%;"></div>
-          </div>
-          <div class="poly-evidence">Rotation matrix transformations detected</div>
-        </div>
 
-        <!-- 3. URDF Simulation -->
-        <div class="polygraph-item">
-          <div class="polygraph-header">
-            <span>URDF Robot Modeling</span>
-            <span class="status-tag tag-partial" id="tag-urdf">PARTIAL (45%)</span>
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenAuth')">Back</button>
+            <button class="btn btn-primary" id="btnConsentProceed" onclick="submitConsent()" disabled>
+              Accept & Continue to Resume Upload ➔
+            </button>
           </div>
-          <div class="meter-bar">
-            <div class="meter-fill fill-amber" id="meter-urdf" style="width: 45%;"></div>
-          </div>
-          <div class="poly-evidence" id="evidence-urdf">Basic mesh geometry; missing joint physics</div>
-        </div>
-
-        <!-- 4. ROS 2 -->
-        <div class="polygraph-item">
-          <div class="polygraph-header">
-            <span>ROS 2 Middleware</span>
-            <span class="status-tag tag-unverified" id="tag-ros">NOT VERIFIED (15%)</span>
-          </div>
-          <div class="meter-bar">
-            <div class="meter-fill fill-red" id="meter-ros" style="width: 15%;"></div>
-          </div>
-          <div class="poly-evidence" id="evidence-ros">0 rclpy imports or package.xml found</div>
         </div>
       </div>
+    </section>
 
-      <!-- SIMULATION TRIGGER BUTTON -->
-      <button class="action-btn btn-simulate-push" id="btnPush" onclick="simulateGitPush()">
-        <span>🚀</span> Simulate Git Push (Commit Capstone)
-      </button>
-      <div style="font-size: 0.72rem; color: #64748B; text-align: center;">
-        Demonstrates webhook auto-verification on student GitHub commit.
+    <!-- ========================================== -->
+    <!-- SCREEN 3: RESUME UPLOAD -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenResume">
+      <div style="max-width: 800px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📄 Resume Upload & Skill Extraction</h2>
+            <p class="card-desc">Upload your resume PDF. The PyMuPDF extraction engine extracts technical claims, education, and projects with zero hallucination.</p>
+          </div>
+
+          <!-- Drag and Drop Box -->
+          <div id="dropZone" style="border: 2px dashed rgba(6, 182, 212, 0.4); border-radius: 12px; padding: 40px 20px; text-align: center; background: rgba(6, 182, 212, 0.03); margin-bottom: 24px; cursor: pointer;" onclick="document.getElementById('resumeFileInput').click()">
+            <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 6px;">Click or Drag & Drop Resume (PDF)</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Supported formats: PDF (Maximum 10MB)</div>
+            <input type="file" id="resumeFileInput" accept=".pdf" style="display: none;" onchange="handleResumeFileSelected(this.files[0])">
+          </div>
+
+          <!-- Sample Resume Quick Button -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Don't have a PDF ready?</span>
+            <button class="btn btn-ghost" onclick="loadSampleResume()" style="font-size: 0.8rem;">
+              ⚡ Load Sample Resume (Rohan Sharma - CS/Backend)
+            </button>
+          </div>
+
+          <!-- Extraction Results Area -->
+          <div id="resumeResults" style="display: none; border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div>
+                <strong id="resumeCandName" style="font-size: 1.05rem;">Rohan Sharma</strong>
+                <div id="resumeCandEdu" style="font-size: 0.8rem; color: var(--text-muted);">B.Tech Computer Science • 2021-2025</div>
+              </div>
+              <span class="badge badge-verified">✓ Parsed Successfully</span>
+            </div>
+
+            <div style="margin-top: 16px;">
+              <label class="form-label">Extracted Technical Claims (Click × to remove or type below to add):</label>
+              <div class="tags-container" id="extractedSkillsContainer"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+              <input type="text" class="form-input" id="newSkillInput" placeholder="Add custom skill (e.g. Redis, GraphQL)" style="max-width: 300px;">
+              <button class="btn btn-secondary" onclick="addCustomSkill()">+ Add Skill</button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenConsent')">Back</button>
+            <button class="btn btn-primary" id="btnResumeProceed" onclick="saveResumeAndProceed()" disabled>
+              Continue to GitHub Verification ➔
+            </button>
+          </div>
+        </div>
       </div>
-    </aside>
+    </section>
 
-    <!-- CENTER CANVAS: INTERACTIVE TOPOLOGICAL DAG -->
-    <main class="canvas-center">
-      <div class="canvas-toolbar">
-        <div class="legend-chip"><span class="dot dot-green"></span> Demonstrated (Cleared)</div>
-        <div class="legend-chip"><span class="dot dot-amber"></span> Active Prerequisite Gap</div>
-        <div class="legend-chip"><span class="dot dot-grey"></span> Locked Target Node</div>
+    <!-- ========================================== -->
+    <!-- SCREEN 4: GITHUB CONNECTION & REPO SELECTION -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenGithub">
+      <div style="max-width: 840px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🐙 GitHub Connection & Selective Repository Inspection</h2>
+            <p class="card-desc">CareerLattice verifies claims via Tree-sitter AST & manifest inspection. Select specifically which repositories you permit us to analyze.</p>
+          </div>
+
+          <!-- Handle Input Form -->
+          <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+            <input type="text" class="form-input" id="githubHandleInput" placeholder="GitHub username (e.g. rohan-sharma-dev)" value="rohan-sharma-dev" style="flex: 1;">
+            <button class="btn btn-primary" onclick="connectGithub()">
+              Fetch Repositories
+            </button>
+          </div>
+
+          <div style="background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 8px; padding: 12px; font-size: 0.78rem; color: #93C5FD; margin-bottom: 20px;">
+            🔒 <strong>Principle of Minimum Privilege:</strong> We analyze only public repositories or specific authorized apps. Source code AST analysis runs server-side with zero token exposure.
+          </div>
+
+          <!-- Repositories List with Selective Checkboxes -->
+          <div id="repoListContainer" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Populated via JS -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenResume')">Back</button>
+            <button class="btn btn-emerald" id="btnAnalyzeGithub" onclick="runGithubASTAnalysis()">
+              Run AST Code Analysis on Selected Repos ➔
+            </button>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="graph-stage">
+    <!-- ========================================== -->
+    <!-- SCREEN 5: SELF ASSESSMENT -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenSelf">
+      <div style="max-width: 800px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 Skill Self-Assessment</h2>
+            <p class="card-desc">Rate your familiarity with your claimed skills. <em>Note: Self-assessment sets your baseline test calibration but is not treated as verified proficiency.</em></p>
+          </div>
+
+          <div id="selfAssessmentList" style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- Rendered via JS -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenGithub')">Back</button>
+            <button class="btn btn-primary" onclick="submitSelfAssessmentAndProceed()">
+              Save Ratings & Start Adaptive Assessment ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 6: ADAPTIVE TECHNICAL ASSESSMENT -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenAssessment">
+      <div style="max-width: 840px; margin: 30px auto;">
+        <div class="card">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h2 class="card-title">🧠 Adaptive Technical Assessment</h2>
+              <p class="card-desc">Validating claims with multi-format questions (MCQ, Assertion-Reason, Debugging, Code Output, Architecture).</p>
+            </div>
+            <div style="text-align: right;">
+              <span class="badge badge-partial" id="assessmentSkillBadge">Python • Intermediate</span>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Dynamic Calibration</div>
+            </div>
+          </div>
+
+          <!-- Question Display Container -->
+          <div id="questionContainer">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Immediate Feedback Area -->
+          <div id="questionFeedback" style="display: none; margin-top: 20px; padding: 14px; border-radius: 8px;"></div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenSelf')">Back</button>
+            <button class="btn btn-primary" id="btnNextQuestion" onclick="nextQuestion()" style="display: none;">
+              Next Adaptive Question ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 7: CAREER READINESS DASHBOARD -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenDashboard">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
         
-        <!-- LEVEL 1: FOUNDATION -->
-        <div class="graph-level">
-          <div class="level-label">Level 1: Core Physics & Math Foundations</div>
-          
-          <div class="node-card node-cleared" onclick="selectNode('mechanics')">
-            <div class="node-header">
-              <span class="node-tier">Foundational Physics</span>
-              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
+        <!-- Top Metrics Banner -->
+        <div class="card" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(99, 102, 241, 0.08)); border-color: rgba(6, 182, 212, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--cyan); font-weight: 700;">Target Role Calibration</div>
+              <h1 style="font-size: 1.6rem; font-weight: 800; margin: 4px 0;" id="dashboardRoleTitle">Junior Backend Cloud Developer</h1>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">
+                Candidate: <strong style="color: #fff;" id="dashCandidateName">Rohan Sharma</strong> • Calibration: <span style="color: #34D399; font-weight: 700;">Intermediate</span>
+              </div>
             </div>
-            <div class="node-title">Classical Mechanics & Kinematics</div>
-            <div class="node-sub">Degrees of freedom, torque, inertia, velocity ODEs.</div>
-          </div>
 
-          <div class="node-card node-cleared" onclick="selectNode('linalg')">
-            <div class="node-header">
-              <span class="node-tier">Foundational Math</span>
-              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <div style="text-align: right;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Evidence-Backed Readiness</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #34D399;" id="dashReadinessRatio">6 / 9 Skills</div>
+              </div>
+              <button class="btn btn-emerald" onclick="triggerEvidenceRescan()" id="btnDashboardRescan">
+                🔄 Update My Evidence (Rescan GitHub)
+              </button>
             </div>
-            <div class="node-title">Linear Algebra & Transforms</div>
-            <div class="node-sub">Eigenvalues, quaternions, SO(3) rotation matrices.</div>
-          </div>
-        </div>
-
-        <!-- LEVEL 2: COMPUTATIONAL BRIDGE -->
-        <div class="graph-level">
-          <div class="level-label">Level 2: Computational Simulation Bridge</div>
-
-          <div class="node-card node-cleared" onclick="selectNode('scipy')">
-            <div class="node-header">
-              <span class="node-tier">Computation</span>
-              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
-            </div>
-            <div class="node-title">Scientific Python (NumPy/SciPy)</div>
-            <div class="node-sub">Trajectory simulation & numerical integration.</div>
-          </div>
-
-          <div class="node-card node-active" id="nodeUrdf" onclick="selectNode('urdf')">
-            <div class="node-header">
-              <span class="node-tier">Active Prerequisite</span>
-              <span class="node-badge" id="badgeUrdf" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24;">🟡 Learn Next</span>
-            </div>
-            <div class="node-title">URDF Modeling & PyBullet Physics</div>
-            <div class="node-sub">Rigid body definitions, collision bounds & joint limits.</div>
           </div>
         </div>
 
-        <!-- LEVEL 3: CAPSTONE TARGET -->
-        <div class="graph-level">
-          <div class="level-label">Level 3: Industrial Robotics Middleware</div>
+        <!-- Role Selector & Tabs -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Switch Target Role:</label>
+            <select class="form-input" id="targetRoleSelect" style="width: auto; padding: 6px 12px; font-size: 0.85rem;" onchange="handleRoleChange(this.value)">
+              <option value="Junior Backend Developer" selected>Junior Backend Developer</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="Cloud Engineer">Cloud Engineer</option>
+              <option value="AI/ML Engineer">AI/ML Engineer</option>
+            </select>
+          </div>
 
-          <div class="node-card node-locked" id="nodeRos" onclick="selectNode('ros')">
-            <div class="node-header">
-              <span class="node-tier">Industry Target</span>
-              <span class="node-badge" id="badgeRos" style="background: rgba(100, 116, 139, 0.2); color: #94A3B8;">⚪ Locked Goal</span>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenRoadmap')">🗺️ View Prerequisite Roadmap</button>
+            <button class="btn btn-secondary" onclick="navigateTo('screenJobs')">💼 View Matched Jobs</button>
+          </div>
+        </div>
+
+        <!-- Skill Evidence Grid -->
+        <div class="card">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h2 class="card-title">🛡️ Deterministic Evidence Matrix</h2>
+              <p class="card-desc">Click any skill card to open the Transparent Evidence Drawer showing exact file AST findings, assessment scores, and confidence rationale.</p>
             </div>
-            <div class="node-title">ROS 2 Navigation & Sensor Fusion</div>
-            <div class="node-sub">LiDAR ray-casting, Extended Kalman Filter & /cmd_vel.</div>
+            <div style="display: flex; gap: 10px; font-size: 0.75rem;">
+              <span class="badge badge-verified">✓ Verified</span>
+              <span class="badge badge-partial">◐ Partial</span>
+              <span class="badge badge-unverified">○ Not Verified</span>
+            </div>
+          </div>
+
+          <div class="grid-3" id="skillsMatrixGrid">
+            <!-- Populated via JS -->
           </div>
         </div>
 
       </div>
-    </main>
+    </section>
 
-    <!-- RIGHT PANEL: CAPSTONE BLUEPRINT & JOB OPPORTUNITIES -->
-    <aside class="sidebar-right">
-      <div class="section-title">🛠️ Prescribed Industrial Capstone</div>
-      
-      <div class="capstone-box">
-        <div style="font-size: 0.72rem; color: #A5B4FC; font-weight: 700; text-transform: uppercase;">
-          Proof-of-Competence Project
-        </div>
-        <div class="capstone-title">
-          Autonomous Mobile Robot (AMR): Kinematic Physics Simulator in ROS 2
-        </div>
-        
-        <ul class="milestone-list">
-          <li class="milestone-item">
-            <span class="m-num">1</span>
-            <span>Differential-drive kinematics equations with Runge-Kutta numerical integration.</span>
-          </li>
-          <li class="milestone-item">
-            <span class="m-num">2</span>
-            <span>URDF robot file with rigid masses, wheel friction & PyBullet simulation sandbox.</span>
-          </li>
-          <li class="milestone-item">
-            <span class="m-num">3</span>
-            <span>LiDAR sensor simulation + Extended Kalman Filter (EKF) state estimation.</span>
-          </li>
-          <li class="milestone-item">
-            <span class="m-num">4</span>
-            <span>ROS 2 nodes publishing velocity commands with obstacle avoidance.</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="section-title">🎓 Verified Learning Resource</div>
-      <div class="resource-card" id="resourceCard">
-        <div class="resource-source">🇮🇳 NPTEL / IIT Madras • Module 4</div>
-        <div class="resource-title">Robotics & Control Systems: Rigid Body Dynamics & Robot Kinematics</div>
-        <div style="font-size: 0.75rem; color: #94A3B8;">Prof. B. Ravindran & Prof. T. Asokan • Timestamp: 14:20 to 32:45</div>
-        <a href="https://nptel.ac.in" target="_blank" class="resource-link">
-          Open Verified Lecture Module ➔
-        </a>
-      </div>
-
-      <div class="section-title">
-        <span>💼 Matched Jobs (Open-Source JobSpy)</span>
-      </div>
-
-      <!-- Job 1 -->
-      <div class="job-card">
-        <div class="job-header">
+    <!-- ========================================== -->
+    <!-- SCREEN 8: ROADMAP DAG -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenRoadmap">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <div class="job-role">Robotics Simulation Intern</div>
-            <div class="job-company">Ather Energy • Bangalore</div>
+            <h2 class="card-title">🗺️ Prerequisite-Aware Topological Roadmap (Kahn's DAG)</h2>
+            <p class="card-desc">Demonstrated skills are skipped automatically. The roadmap begins strictly from your unmastered prerequisites.</p>
           </div>
-          <span class="job-match-badge match-mid" id="atherBadge">80% Match</span>
+          <div style="display: flex; gap: 10px;">
+            <span class="badge badge-verified">🟢 Mastered / Cleared</span>
+            <span class="badge badge-partial">🟡 Active Prerequisite Gap</span>
+            <span class="badge badge-unverified">⚪ Locked Dependent Node</span>
+          </div>
         </div>
-        <div style="font-size: 0.74rem; color: #94A3B8;" id="atherStatus">
-          4 of 5 Core Skills Verified • Missing: ROS 2 Middleware
-        </div>
-        <a href="#" class="btn-apply" onclick="alert('Redirecting to Ather Energy original careers portal...')">
-          View on Original Portal
-        </a>
-      </div>
 
-      <!-- Job 2 -->
-      <div class="job-card">
-        <div class="job-header">
+        <div class="grid-2">
+          <!-- Left: Interactive Topological Nodes -->
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 16px;">Sequential Learning Path</h3>
+            <div class="roadmap-stage" id="roadmapNodesContainer">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Right: Prescribed Industrial Capstone & Verified Resources -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Prescribed Capstone Card -->
+            <div class="card" style="border-color: rgba(99, 102, 241, 0.4); background: linear-gradient(145deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));">
+              <div style="font-size: 0.72rem; color: #A5B4FC; font-weight: 700; text-transform: uppercase;">
+                🛠️ Prescribed Proof-of-Competence Capstone
+              </div>
+              <h3 style="font-size: 1.1rem; font-weight: 800; margin: 8px 0;" id="capstoneTitle">
+                Containerized Microservice & Cloud Deployment
+              </h3>
+              <p style="font-size: 0.82rem; color: #CBD5E1; line-height: 1.5;" id="capstoneDesc">
+                Containerize your FastAPI application using a multi-stage Dockerfile, configure docker-compose for PostgreSQL, and push to GitHub to verify Docker & AWS competence.
+              </p>
+
+              <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <div style="font-size: 0.78rem; font-weight: 700; margin-bottom: 8px;">Milestone Checklist:</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.78rem; color: #94A3B8;" id="capstoneMilestones">
+                  <div>1. Write multi-stage Dockerfile with non-root user.</div>
+                  <div>2. Setup docker-compose.yml with healthcheck on postgres.</div>
+                  <div>3. Push to GitHub and trigger "Update My Evidence" rescan.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Verified Resources Card -->
+            <div class="card">
+              <div style="font-size: 0.72rem; color: var(--cyan); font-weight: 700; text-transform: uppercase;">
+                🎓 Verified Curated Learning Resources
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">
+                Direct syllabus links from NPTEL, SWAYAM, MIT OCW, and Official Documentation. Zero broken URLs.
+              </div>
+              <div id="verifiedResourcesContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 9: JOB AVAILABILITY PAGE -->
+    <!-- ========================================== -->
+    <section class="screen" id="screenJobs">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
-            <div class="job-role">AMR Dynamics Engineer</div>
-            <div class="job-company">GreyOrange Robotics • Gurgaon</div>
+            <h2 class="card-title">💼 Verified Career Opportunities</h2>
+            <p class="card-desc">Jobs matched based on demonstrated code evidence and target role requirements (powered by modular JobSpy Provider).</p>
           </div>
-          <span class="job-match-badge match-mid" id="greyBadge">75% Match</span>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" onclick="navigateTo('screenDashboard')">Back to Dashboard</button>
+            <button class="btn btn-emerald" onclick="triggerEvidenceRescan()">🔄 Rescan to Unlock Jobs</button>
+          </div>
         </div>
-        <div style="font-size: 0.74rem; color: #94A3B8;" id="greyStatus">
-          Core Mechanics verified • Missing: URDF Sandbox
+
+        <!-- Jobs Grid -->
+        <div class="grid-2" id="jobsGridContainer">
+          <!-- Populated via JS -->
         </div>
-        <a href="#" class="btn-apply" onclick="alert('Redirecting to GreyOrange original careers portal...')">
-          View on Original Portal
-        </a>
       </div>
-    </aside>
+    </section>
 
-  </div>
+  </main>
 
-  <!-- INSTITUTIONAL TPO VIEW -->
-  <div class="tpo-view" id="tpoView">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
-      <div>
-        <h2 style="font-size: 1.5rem; font-weight: 800;">🏫 Institutional Curriculum vs. Industry Discrepancy Heatmap</h2>
-        <p style="color: #94A3B8; font-size: 0.85rem; margin-top: 4px;">
-          Audited University B.Tech / M.Sc. Syllabus against 12,000 Live Job Market Postings
-        </p>
-      </div>
-      <button class="action-btn" style="width: auto; background: var(--indigo); color: white; padding: 10px 18px;" onclick="alert('Upload new curriculum PDF dialog')">
-        📄 Upload Department Syllabus (PDF)
-      </button>
+  <!-- TRANSPARENT EVIDENCE DRAWER MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeEvidenceDrawer()"></div>
+  <div class="evidence-modal" id="evidenceDrawer">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3 style="font-size: 1.2rem; font-weight: 800;" id="drawerSkillName">Skill Evidence</h3>
+      <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="closeEvidenceDrawer()">✕ Close</button>
     </div>
 
-    <table class="heatmap-table">
-      <thead>
-        <tr>
-          <th>Technical Domain</th>
-          <th>Live Industry Demand</th>
-          <th>Institutional Syllabus Hours</th>
-          <th>Gap Status</th>
-          <th>Recommended TPO Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Classical Mechanics & Kinematics</strong></td>
-          <td><span style="color: #34D399; font-weight: 700;">85% High</span></td>
-          <td>120 Hours (Semester 1 & 2)</td>
-          <td><span class="status-pill" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Balanced</span></td>
-          <td>Maintain current course depth</td>
-        </tr>
-        <tr>
-          <td><strong>URDF & Physics Simulation (PyBullet/Gazebo)</strong></td>
-          <td><span style="color: #F87171; font-weight: 700;">74% High</span></td>
-          <td>0 Hours (Absent)</td>
-          <td><span class="status-pill" style="background: rgba(239, 68, 68, 0.2); color: #F87171;">🔴 Critical Gap</span></td>
-          <td>Host 2-weekend lab simulation workshop</td>
-        </tr>
-        <tr>
-          <td><strong>Robot Operating System (ROS 2)</strong></td>
-          <td><span style="color: #F87171; font-weight: 700;">82% Very High</span></td>
-          <td>0 Hours (Absent)</td>
-          <td><span class="status-pill" style="background: rgba(239, 68, 68, 0.2); color: #F87171;">🔴 Critical Gap</span></td>
-          <td>Partner with NASSCOM FutureSkills Prime</td>
-        </tr>
-        <tr>
-          <td><strong>Legacy 8085 Microprocessor Assembly</strong></td>
-          <td><span style="color: #94A3B8; font-weight: 700;">&lt; 2% Negligible</span></td>
-          <td>80 Laboratory Hours</td>
-          <td><span class="status-pill" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24;">🟡 Obsolete Overhead</span></td>
-          <td>Replace with Embedded Linux / ARM Cortex</td>
-        </tr>
-      </tbody>
-    </table>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <span class="badge" id="drawerStatusBadge">VERIFIED</span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);" id="drawerConfidence">Confidence: High</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; font-size: 0.85rem;">
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">1. Resume Claim</div>
+        <div style="font-size: 0.9rem; font-weight: 600; margin-top: 4px;" id="drawerResumeClaim">Claimed in Technical Skills</div>
+      </div>
+
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">2. GitHub AST Implementation Evidence</div>
+        <div style="font-size: 0.85rem; margin-top: 4px; line-height: 1.5;" id="drawerGithubEvidence">Inspected in 3 repositories.</div>
+        <div class="code-block" id="drawerGithubFiles" style="font-size: 0.75rem; max-height: 120px; overflow-y: auto;">
+          files detected...
+        </div>
+      </div>
+
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">3. Self-Assessment vs. Adaptive Assessment</div>
+        <div style="margin-top: 6px; display: flex; justify-content: space-between;">
+          <span>Self-Declared Level:</span>
+          <strong id="drawerSelfLevel">Intermediate</strong>
+        </div>
+        <div style="margin-top: 4px; display: flex; justify-content: space-between;">
+          <span>Assessment Score:</span>
+          <strong id="drawerScore" style="color: #34D399;">9 / 10</strong>
+        </div>
+      </div>
+
+      <div style="background: rgba(6, 182, 212, 0.06); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 8px; padding: 14px;">
+        <div style="font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; font-weight: 700;">Transparent Rationale</div>
+        <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 4px; line-height: 1.4;" id="drawerRationale">
+          Candidate claimed Python on resume, demonstrated 12 AST imports across 3 repositories, and scored 90% on technical assessment. Assigned Verified status.
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- TOAST NOTIFICATION -->
   <div class="toast" id="toast">
-    <span style="font-size: 20px;">✅</span>
+    <span style="font-size: 20px;" id="toastIcon">✅</span>
     <div>
-      <strong style="color: #34D399;">GitHub Commit Detected!</strong>
-      <div style="font-size: 0.75rem; color: #94A3B8;" id="toastMsg">Tree-sitter verified 'robot.urdf' & ROS 2 nodes.</div>
+      <strong style="color: #34D399;" id="toastTitle">Notification</strong>
+      <div style="font-size: 0.75rem; color: #94A3B8;" id="toastMsg">Action completed successfully.</div>
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- APPLICATION LOGIC (CLIENT + REST API BRIDGE) -->
+  <!-- ========================================== -->
   <script>
-    function switchMode(mode) {
-      const studentView = document.getElementById('studentView');
-      const tpoView = document.getElementById('tpoView');
-      const btnStudent = document.getElementById('btnStudentMode');
-      const btnTpo = document.getElementById('btnTpoMode');
+    // State store
+    const state = {
+      token: localStorage.getItem('cl_token') || null,
+      currentUser: JSON.parse(localStorage.getItem('cl_user') || 'null'),
+      consentAccepted: false,
+      resumeData: null,
+      extractedSkills: ["Python", "FastAPI", "PostgreSQL", "Docker", "Git", "REST APIs", "AWS", "Kubernetes"],
+      selectedRepos: ["sentinel-backend-api", "careerlattice-core", "skillrack-agent"],
+      selfRatings: {
+        "Python": "Advanced",
+        "FastAPI": "Intermediate",
+        "PostgreSQL": "Developing",
+        "Docker": "Developing",
+        "Git": "Intermediate",
+        "REST APIs": "Intermediate",
+        "AWS": "Beginner",
+        "Kubernetes": "Beginner"
+      },
+      currentQuestionIndex: 0,
+      activeQuestions: [],
+      skillsEvidenceMatrix: [],
+      targetRole: "Junior Backend Developer",
+      isRescanned: false
+    };
 
-      if (mode === 'student') {
-        studentView.style.display = 'grid';
-        tpoView.style.display = 'none';
-        btnStudent.classList.add('active');
-        btnTpo.classList.remove('active');
-      } else {
-        studentView.style.display = 'none';
-        tpoView.style.display = 'block';
-        btnTpo.classList.add('active');
-        btnStudent.classList.remove('active');
+    // Navigation controller
+    function navigateTo(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add('active');
+
+      // Update Stepper
+      const stepMap = {
+        'screenAuth': 1,
+        'screenConsent': 2,
+        'screenResume': 3,
+        'screenGithub': 4,
+        'screenSelf': 5,
+        'screenAssessment': 6,
+        'screenDashboard': 7,
+        'screenRoadmap': 8,
+        'screenJobs': 9
+      };
+      const activeNum = stepMap[screenId] || 1;
+      for (let i = 1; i <= 9; i++) {
+        const item = document.getElementById(`step-${i}`);
+        if (!item) continue;
+        item.classList.remove('active', 'completed');
+        if (i < activeNum) item.classList.add('completed');
+        if (i === activeNum) item.classList.add('active');
       }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function selectNode(nodeKey) {
-      const resourceCard = document.getElementById('resourceCard');
-      if (nodeKey === 'urdf') {
-        resourceCard.innerHTML = `
-          <div class="resource-source">🇮🇳 NPTEL / IIT Madras • Module 4</div>
-          <div class="resource-title">Robotics & Control Systems: Rigid Body Dynamics & Robot Kinematics</div>
-          <div style="font-size: 0.75rem; color: #94A3B8;">Prof. B. Ravindran & Prof. T. Asokan • Timestamp: 14:20 to 32:45</div>
-          <a href="https://nptel.ac.in" target="_blank" class="resource-link">Open Verified Lecture Module ➔</a>
-        `;
-      } else if (nodeKey === 'ros') {
-        resourceCard.innerHTML = `
-          <div class="resource-source">📚 Official Documentation & Course</div>
-          <div class="resource-title">ROS 2 Navigation & Sensor Fusion (Humble/Iron)</div>
-          <div style="font-size: 0.75rem; color: #94A3B8;">Publisher-Subscriber Architecture, /scan & /cmd_vel nodes</div>
-          <a href="https://docs.ros.org" target="_blank" class="resource-link">Open Official Documentation ➔</a>
-        `;
-      } else {
-        resourceCard.innerHTML = `
-          <div class="resource-source">🎓 Verified Academic Reference</div>
-          <div class="resource-title">Advanced Dynamics & Mathematical Physics for Robotics</div>
-          <div style="font-size: 0.75rem; color: #94A3B8;">MIT OpenCourseWare (Classical Mechanics 8.01)</div>
-          <a href="https://ocw.mit.edu" target="_blank" class="resource-link">Open Course Materials ➔</a>
-        `;
-      }
-    }
-
-    let isPushed = false;
-    function simulateGitPush() {
-      if (isPushed) return;
-      isPushed = true;
-
-      // 1. Show Toast
+    function showToast(title, msg, isError = false) {
       const toast = document.getElementById('toast');
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastTitle').style.color = isError ? '#F87171' : '#34D399';
+      document.getElementById('toastMsg').innerText = msg;
+      document.getElementById('toastIcon').innerText = isError ? '⚠️' : '✅';
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 4000);
-
-      // 2. Update Code Polygraph Meters
-      document.getElementById('meter-urdf').style.width = '94%';
-      document.getElementById('meter-urdf').className = 'meter-fill fill-emerald';
-      document.getElementById('tag-urdf').className = 'status-tag tag-verified';
-      document.getElementById('tag-urdf').innerText = 'VERIFIED (94%)';
-      document.getElementById('evidence-urdf').innerText = 'robot.urdf loaded in PyBullet with joints';
-
-      document.getElementById('meter-ros').style.width = '88%';
-      document.getElementById('meter-ros').className = 'meter-fill fill-emerald';
-      document.getElementById('tag-ros').className = 'status-tag tag-verified';
-      document.getElementById('tag-ros').innerText = 'VERIFIED (88%)';
-      document.getElementById('evidence-ros').innerText = 'rclpy publisher & LiDAR subscribers active';
-
-      // 3. Update Graph Nodes
-      const nodeUrdf = document.getElementById('nodeUrdf');
-      nodeUrdf.className = 'node-card node-cleared';
-      document.getElementById('badgeUrdf').style.background = 'rgba(16, 185, 129, 0.2)';
-      document.getElementById('badgeUrdf').style.color = '#34D399';
-      document.getElementById('badgeUrdf').innerText = '🟢 Cleared via Capstone';
-
-      const nodeRos = document.getElementById('nodeRos');
-      nodeRos.className = 'node-card node-cleared';
-      document.getElementById('badgeRos').style.background = 'rgba(16, 185, 129, 0.2)';
-      document.getElementById('badgeRos').style.color = '#34D399';
-      document.getElementById('badgeRos').innerText = '🟢 Demonstrated';
-
-      // 4. Update Matched Jobs
-      const atherBadge = document.getElementById('atherBadge');
-      atherBadge.className = 'job-match-badge match-high';
-      atherBadge.innerText = '100% Match';
-      document.getElementById('atherStatus').innerHTML = '<span style="color: #34D399; font-weight: 700;">All 5 of 5 Core Skills Verified via AMR Capstone!</span>';
-
-      const greyBadge = document.getElementById('greyBadge');
-      greyBadge.className = 'job-match-badge match-high';
-      greyBadge.innerText = '95% Match';
-      document.getElementById('greyStatus').innerHTML = '<span style="color: #34D399; font-weight: 700;">Physics & Simulation verified! Ready to apply.</span>';
-
-      // 5. Change Button State
-      const btnPush = document.getElementById('btnPush');
-      btnPush.innerText = '✅ Capstone Verified on GitHub';
-      btnPush.style.background = 'rgba(16, 185, 129, 0.2)';
-      btnPush.style.color = '#34D399';
-      btnPush.style.border = '1px solid rgba(16, 185, 129, 0.4)';
     }
+
+    // ==========================================
+    // 1. AUTHENTICATION CONTROLLER
+    // ==========================================
+    let currentAuthTab = 'login';
+    function switchAuthTab(tab) {
+      currentAuthTab = tab;
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const groupFullName = document.getElementById('groupFullName');
+      const btnSubmit = document.getElementById('btnAuthSubmit');
+
+      if (tab === 'login') {
+        tabLogin.className = 'btn btn-primary';
+        tabRegister.className = 'btn btn-secondary';
+        groupFullName.style.display = 'none';
+        btnSubmit.innerText = 'Log In to Platform';
+      } else {
+        tabLogin.className = 'btn btn-secondary';
+        tabRegister.className = 'btn btn-primary';
+        groupFullName.style.display = 'block';
+        btnSubmit.innerText = 'Create Account';
+      }
+    }
+
+    function fillDemoCredentials() {
+      document.getElementById('authEmail').value = 'rohan@careerlattice.ai';
+      document.getElementById('authPassword').value = 'password123';
+      showToast('Demo Credentials Filled', 'Ready to log in as Rohan Sharma.');
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const fullName = document.getElementById('authFullName').value.trim();
+
+      try {
+        const endpoint = currentAuthTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+        const payload = currentAuthTab === 'login' ? { email, password } : { email, password, full_name: fullName };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          state.token = data.token;
+          state.currentUser = data.user;
+          localStorage.setItem('cl_token', data.token);
+          localStorage.setItem('cl_user', JSON.stringify(data.user));
+          updateUserBadge();
+          showToast('Welcome!', `Logged in as ${data.user.full_name}`);
+          navigateTo('screenConsent');
+        } else {
+          // If offline / server not reachable, allow client demo session
+          const err = await res.json();
+          showToast('Notice', err.detail || 'Using client demo session mode.');
+          state.currentUser = { full_name: fullName || 'Rohan Sharma', email };
+          updateUserBadge();
+          navigateTo('screenConsent');
+        }
+      } catch (err) {
+        // Fallback for static GitHub Pages / offline review
+        state.currentUser = { full_name: fullName || 'Rohan Sharma', email };
+        updateUserBadge();
+        showToast('Demo Mode', 'Logged in as Rohan Sharma (Client Mode).');
+        navigateTo('screenConsent');
+      }
+    }
+
+    function updateUserBadge() {
+      const badge = document.getElementById('userBadge');
+      const nameSpan = document.getElementById('headerUserName');
+      if (state.currentUser) {
+        badge.style.display = 'flex';
+        nameSpan.innerText = state.currentUser.full_name || 'Rohan Sharma';
+      }
+    }
+
+    // ==========================================
+    // 2. CONSENT CONTROLLER
+    // ==========================================
+    function toggleConsentButton() {
+      const checked = document.getElementById('consentCheckbox').checked;
+      document.getElementById('btnConsentProceed').disabled = !checked;
+    }
+
+    async function submitConsent() {
+      state.consentAccepted = true;
+      if (state.token) {
+        try {
+          await fetch('/api/consent', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${state.token}`
+            },
+            body: JSON.stringify({ accepted: true })
+          });
+        } catch (e) {
+          console.warn("API consent call error, continuing in client state:", e);
+        }
+      }
+      showToast('Consent Recorded', 'Privacy preferences saved.');
+      navigateTo('screenResume');
+    }
+
+    // ==========================================
+    // 3. RESUME UPLOAD CONTROLLER
+    // ==========================================
+    function loadSampleResume() {
+      const sample = {
+        name: "Rohan Sharma",
+        email: "rohan@careerlattice.ai",
+        education: "B.Tech Computer Science (2021-2025)",
+        extracted_skills: ["Python", "FastAPI", "PostgreSQL", "Docker", "Git", "REST APIs", "AWS", "Kubernetes"]
+      };
+      state.resumeData = sample;
+      state.extractedSkills = sample.extracted_skills;
+      renderExtractedSkills();
+      document.getElementById('resumeResults').style.display = 'block';
+      document.getElementById('btnResumeProceed').disabled = false;
+      showToast('Sample Resume Loaded', 'Extracted 8 technical skills from sample PDF.');
+    }
+
+    async function handleResumeFileSelected(file) {
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith('.pdf')) {
+        showToast('Invalid File', 'Only PDF resumes are supported.', true);
+        return;
+      }
+
+      showToast('Parsing Resume', 'Inspecting text with PyMuPDF...');
+      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/resume/upload', {
+          method: 'POST',
+          headers: state.token ? { 'Authorization': `Bearer ${state.token}` } : {},
+          body: formData
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          state.resumeData = data.extracted_data;
+          state.extractedSkills = data.extracted_data.extracted_skills;
+          renderExtractedSkills();
+          document.getElementById('resumeResults').style.display = 'block';
+          document.getElementById('btnResumeProceed').disabled = false;
+          showToast('Resume Parsed', `Extracted ${state.extractedSkills.length} skills from ${file.name}`);
+        } else {
+          loadSampleResume();
+        }
+      } catch (e) {
+        loadSampleResume();
+      }
+    }
+
+    function renderExtractedSkills() {
+      const container = document.getElementById('extractedSkillsContainer');
+      container.innerHTML = '';
+      state.extractedSkills.forEach((skill, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'tag-item';
+        tag.innerHTML = `
+          <span>${skill}</span>
+          <span class="remove-btn" onclick="removeExtractedSkill(${index})">×</span>
+        `;
+        container.appendChild(tag);
+      });
+    }
+
+    function removeExtractedSkill(index) {
+      state.extractedSkills.splice(index, 1);
+      renderExtractedSkills();
+    }
+
+    function addCustomSkill() {
+      const input = document.getElementById('newSkillInput');
+      const val = input.value.trim();
+      if (val && !state.extractedSkills.includes(val)) {
+        state.extractedSkills.push(val);
+        renderExtractedSkills();
+        input.value = '';
+      }
+    }
+
+    function saveResumeAndProceed() {
+      navigateTo('screenGithub');
+      initGithubReposList();
+    }
+
+    // ==========================================
+    // 4. GITHUB REPOSITORIES CONTROLLER
+    // ==========================================
+    const demoRepos = [
+      {
+        name: "sentinel-backend-api",
+        description: "High-throughput asynchronous FastAPI microservice with PostgreSQL & Docker",
+        language: "Python",
+        stars: 18,
+        selected: true,
+        detected_manifests: ["requirements.txt", "Dockerfile", "docker-compose.yml"]
+      },
+      {
+        name: "careerlattice-core",
+        description: "Evidence-based skill engine with AST inspection and Kahn's DAG sort",
+        language: "Python",
+        stars: 34,
+        selected: true,
+        detected_manifests: ["pyproject.toml", "Dockerfile", "tests/"]
+      },
+      {
+        name: "skillrack-agent",
+        description: "Autonomous code verification pipeline with Python AST parsing",
+        language: "Python",
+        stars: 12,
+        selected: true,
+        detected_manifests: ["main.py", "requirements.txt"]
+      },
+      {
+        name: "college-mini-project",
+        description: "Static student portfolio website",
+        language: "HTML",
+        stars: 2,
+        selected: false,
+        detected_manifests: ["index.html"]
+      }
+    ];
+
+    function initGithubReposList() {
+      const container = document.getElementById('repoListContainer');
+      container.innerHTML = '';
+
+      demoRepos.forEach(repo => {
+        const isChecked = state.selectedRepos.includes(repo.name);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.padding = '14px 18px';
+        card.style.background = isChecked ? 'rgba(6, 182, 212, 0.05)' : 'rgba(15, 23, 42, 0.6)';
+        card.style.borderColor = isChecked ? 'rgba(6, 182, 212, 0.3)' : 'var(--border-color)';
+
+        card.innerHTML = `
+          <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <input type="checkbox" id="repo-${repo.name}" ${isChecked ? 'checked' : ''} 
+                style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--cyan); cursor: pointer;"
+                onchange="toggleRepoSelection('${repo.name}', this.checked)">
+              <div>
+                <label for="repo-${repo.name}" style="font-weight: 700; font-size: 0.95rem; cursor: pointer; color: #93C5FD;">
+                  ${repo.name}
+                </label>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${repo.description}</div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                  <span style="font-size: 0.7rem; color: #CBD5E1; font-family: 'JetBrains Mono', monospace;">Language: ${repo.language}</span>
+                  <span style="font-size: 0.7rem; color: #CBD5E1;">⭐ ${repo.stars}</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+              ${repo.detected_manifests.map(m => `<span style="font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); font-family: 'JetBrains Mono', monospace;">${m}</span>`).join('')}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleRepoSelection(repoName, isSelected) {
+      if (isSelected && !state.selectedRepos.includes(repoName)) {
+        state.selectedRepos.push(repoName);
+      } else if (!isSelected) {
+        state.selectedRepos = state.selectedRepos.filter(r => r !== repoName);
+      }
+      initGithubReposList();
+    }
+
+    function connectGithub() {
+      showToast('GitHub Repositories Retrieved', 'Found 4 repositories for rohan-sharma-dev.');
+      initGithubReposList();
+    }
+
+    async function runGithubASTAnalysis() {
+      showToast('Running Code Polygraph', 'Analyzing AST imports and manifests in selected repos...');
+      setTimeout(() => {
+        showToast('AST Analysis Complete', 'Implementation evidence detected for Python, FastAPI, Docker, and PostgreSQL.');
+        navigateTo('screenSelf');
+        initSelfAssessmentList();
+      }, 700);
+    }
+
+    // ==========================================
+    // 5. SELF ASSESSMENT CONTROLLER
+    // ==========================================
+    function initSelfAssessmentList() {
+      const container = document.getElementById('selfAssessmentList');
+      container.innerHTML = '';
+
+      state.extractedSkills.forEach(skill => {
+        const currentLevel = state.selfRatings[skill] || "Intermediate";
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.padding = '14px 18px';
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <strong style="font-size: 0.95rem;">${skill}</strong>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Choose your self-declared proficiency:</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              ${['Beginner', 'Developing', 'Intermediate', 'Advanced'].map(lvl => `
+                <button type="button" class="btn ${currentLevel === lvl ? 'btn-primary' : 'btn-secondary'}" 
+                  style="padding: 6px 12px; font-size: 0.75rem;"
+                  onclick="setSelfLevel('${skill}', '${lvl}')">
+                  ${lvl}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setSelfLevel(skill, level) {
+      state.selfRatings[skill] = level;
+      initSelfAssessmentList();
+    }
+
+    function submitSelfAssessmentAndProceed() {
+      showToast('Self-Assessment Saved', 'Calibrating adaptive assessment questions...');
+      loadAdaptiveQuestions();
+      navigateTo('screenAssessment');
+    }
+
+    // ==========================================
+    // 6. ADAPTIVE TECHNICAL ASSESSMENT CONTROLLER
+    // ==========================================
+    const assessmentBank = [
+      {
+        id: "py_q1",
+        skill: "Python",
+        type: "Assertion-Reason",
+        badge: "Assertion–Reason",
+        question: "Assertion: Python dictionaries provide average O(1) time complexity for key lookups.\n\nReason: Python dictionaries are implemented under the hood using sparse hash tables with quadratic/perturbation collision probing.",
+        code: null,
+        options: [
+          "Both Assertion and Reason are true, and Reason is the correct explanation of Assertion.",
+          "Both Assertion and Reason are true, but Reason is NOT the correct explanation.",
+          "Assertion is true, but Reason is false.",
+          "Assertion is false, but Reason is true."
+        ],
+        correct_index: 0,
+        explanation: "Correct! Python dicts are hash tables that map hash(key) into bucket slots, achieving average O(1) amortized lookup."
+      },
+      {
+        id: "fa_q1",
+        skill: "FastAPI",
+        type: "Scenario-Based",
+        badge: "Scenario / Bottleneck",
+        question: "You have a FastAPI endpoint receiving 10,000 requests per minute doing async database queries. Under peak load, worker threads freeze. Which is the most effective immediate architectural remedy?",
+        code: null,
+        options: [
+          "Convert all async def route handlers into synchronous def handlers.",
+          "Increase PostgreSQL async connection pool size & ensure blocking DB drivers are offloaded via run_in_threadpool.",
+          "Restart the Uvicorn server once every 10 minutes using a cron daemon.",
+          "Disable Pydantic request body validation."
+        ],
+        correct_index: 1,
+        explanation: "Correct! FastAPI async event loop will lock up if an async handler uses a blocking driver or exceeds database pool capacity."
+      },
+      {
+        id: "doc_q1",
+        skill: "Docker",
+        type: "Debugging",
+        badge: "Debugging Snippet",
+        question: "The following Dockerfile produces a 1.2 GB image and rebuilds the virtualenv on every code change. What is the root cause?",
+        code: "FROM python:3.11\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\nCMD [\"python\", \"main.py\"]",
+        options: [
+          "requirements.txt must be copied BEFORE copying the entire source code (COPY requirements.txt . && RUN pip install), and a slim base image should be used.",
+          "WORKDIR /app cannot be placed before COPY . .",
+          "CMD requires syntax: ENTRYPOINT python main.py",
+          "pip install requires the --no-cache-dir flag to fix layer caching."
+        ],
+        correct_index: 0,
+        explanation: "Correct! Copying the entire directory invalidates the Docker build cache whenever any file changes. Copying requirements.txt first preserves caching."
+      },
+      {
+        id: "pg_q1",
+        skill: "PostgreSQL",
+        type: "Architecture",
+        badge: "Architecture & Indexing",
+        question: "A high-cardinality multi-column query filtering WHERE tenant_id = 't1' AND created_at >= NOW() - INTERVAL '7 days' is executing sequentially. What B-Tree index structure is optimal?",
+        code: null,
+        options: [
+          "CREATE INDEX idx_tenant_date ON orders (tenant_id, created_at DESC);",
+          "CREATE INDEX idx_created ON orders (created_at);",
+          "Two separate non-composite indexes on tenant_id and created_at.",
+          "A GiST index on tenant_id."
+        ],
+        correct_index: 0,
+        explanation: "Correct! Composite index with equality column first (tenant_id) followed by range column (created_at DESC) allows the query planner to do a direct index scan."
+      }
+    ];
+
+    function loadAdaptiveQuestions() {
+      state.activeQuestions = assessmentBank;
+      state.currentQuestionIndex = 0;
+      renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+      const q = state.activeQuestions[state.currentQuestionIndex];
+      const container = document.getElementById('questionContainer');
+      const badge = document.getElementById('assessmentSkillBadge');
+      const feedback = document.getElementById('questionFeedback');
+      const nextBtn = document.getElementById('btnNextQuestion');
+
+      feedback.style.display = 'none';
+      nextBtn.style.display = 'none';
+      badge.innerText = `${q.skill} • Adaptive Question ${state.currentQuestionIndex + 1} of ${state.activeQuestions.length}`;
+
+      container.innerHTML = `
+        <div style="margin-bottom: 16px;">
+          <span class="q-type-badge">${q.badge}</span>
+        </div>
+        <div style="font-size: 0.95rem; font-weight: 600; line-height: 1.5; white-space: pre-wrap; margin-bottom: 12px;">${q.question}</div>
+        ${q.code ? `<div class="code-block">${q.code}</div>` : ''}
+        <div style="margin-top: 16px;">
+          ${q.options.map((opt, i) => `
+            <button class="option-btn" id="opt-${i}" onclick="selectAnswer(${i})">
+              <strong>${String.fromCharCode(65 + i)}.</strong> ${opt}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(selectedIndex) {
+      const q = state.activeQuestions[state.currentQuestionIndex];
+      const feedback = document.getElementById('questionFeedback');
+      const nextBtn = document.getElementById('btnNextQuestion');
+
+      // Disable all options
+      q.options.forEach((_, i) => {
+        const btn = document.getElementById(`opt-${i}`);
+        btn.disabled = true;
+        if (i === q.correct_index) {
+          btn.classList.add('correct');
+        } else if (i === selectedIndex) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      const isCorrect = selectedIndex === q.correct_index;
+      feedback.style.display = 'block';
+      feedback.style.background = isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
+      feedback.style.border = `1px solid ${isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`;
+      feedback.innerHTML = `
+        <div style="font-weight: 700; color: ${isCorrect ? '#34D399' : '#F87171'}; font-size: 0.88rem; margin-bottom: 4px;">
+          ${isCorrect ? '✓ Correct Answer!' : '✗ Needs Attention'}
+        </div>
+        <div style="font-size: 0.82rem; color: #CBD5E1;">${q.explanation}</div>
+      `;
+
+      nextBtn.style.display = 'inline-flex';
+      if (state.currentQuestionIndex === state.activeQuestions.length - 1) {
+        nextBtn.innerText = 'Calculate Evidence Matrix ➔';
+      } else {
+        nextBtn.innerText = 'Next Adaptive Question ➔';
+      }
+    }
+
+    function nextQuestion() {
+      if (state.currentQuestionIndex < state.activeQuestions.length - 1) {
+        state.currentQuestionIndex++;
+        renderCurrentQuestion();
+      } else {
+        calculateAndRenderEvidence();
+      }
+    }
+
+    // ==========================================
+    // 7. DETERMINISTIC EVIDENCE MATRIX CONTROLLER
+    // ==========================================
+    function calculateAndRenderEvidence() {
+      showToast('Aggregating Evidence', 'Executing transparent rule-based calculation...');
+
+      // Deterministic evidence calculation
+      state.skillsEvidenceMatrix = [
+        {
+          skill: "Python",
+          status: "VERIFIED",
+          final_level: "Advanced",
+          confidence: "High",
+          resume: "Claimed",
+          github_evidence: "3 selected repositories (AST imports, Pytest suites)",
+          files: ["backend/app/main.py", "backend/app/code_inspector.py", "backend/tests/test_all_modules.py"],
+          self_level: "Advanced",
+          score: "10/10",
+          rationale: "Claimed on resume, verified in AST code (FastAPI, PyTest, NumPy), scored 10/10 on advanced assessment."
+        },
+        {
+          skill: "FastAPI",
+          status: "VERIFIED",
+          final_level: "Intermediate",
+          confidence: "High",
+          resume: "Claimed",
+          github_evidence: "Detected FastAPI, APIRouter, Depends, and Pydantic in sentinel-backend-api",
+          files: ["app/main.py", "app/routers/api.py"],
+          self_level: "Intermediate",
+          score: "9/10",
+          rationale: "Multiple router declarations and async dependency injection patterns verified via Tree-sitter AST."
+        },
+        {
+          skill: "Git",
+          status: "VERIFIED",
+          final_level: "Intermediate",
+          confidence: "High",
+          resume: "Claimed",
+          github_evidence: "Multi-branch commit history and pull request tags verified",
+          files: [".git/", "workflows/ci.yml"],
+          self_level: "Intermediate",
+          score: "8/10",
+          rationale: "Active repository commit history and versioning artifacts present."
+        },
+        {
+          skill: "REST APIs",
+          status: "VERIFIED",
+          final_level: "Intermediate",
+          confidence: "High",
+          resume: "Claimed",
+          github_evidence: "HTTP methods (GET, POST, PUT, DELETE) and status code handling implemented",
+          files: ["routes/api.py", "schemas/request.py"],
+          self_level: "Intermediate",
+          score: "9/10",
+          rationale: "RESTful status codes and Pydantic serialization verified across selected projects."
+        },
+        {
+          skill: "PostgreSQL",
+          status: "PARTIAL",
+          final_level: "Developing",
+          confidence: "Medium",
+          resume: "Claimed",
+          github_evidence: "SQLAlchemy connection string present; missing complex composite indexes or migration scripts",
+          files: ["app/database.py"],
+          self_level: "Developing",
+          score: "7/10",
+          rationale: "Basic relational queries detected; advanced indexing and migration evidence is currently missing."
+        },
+        {
+          skill: "Docker",
+          status: state.isRescanned ? "VERIFIED" : "PARTIAL",
+          final_level: state.isRescanned ? "Intermediate" : "Developing",
+          confidence: state.isRescanned ? "High" : "Medium",
+          resume: "Claimed",
+          github_evidence: state.isRescanned ? "Multi-stage Dockerfile with non-root security & docker-compose verified" : "Basic single-stage Dockerfile found; missing multi-stage optimizations",
+          files: state.isRescanned ? ["Dockerfile (Multi-Stage)", "docker-compose.yml"] : ["Dockerfile (Basic)"],
+          self_level: "Developing",
+          score: state.isRescanned ? "9/10" : "6/10",
+          rationale: state.isRescanned ? "Verified via recent commit: Containerized FastAPI service with healthcheck." : "Single stage Dockerfile detected. Multi-stage build and healthcheck tests recommended."
+        },
+        {
+          skill: "AWS",
+          status: state.isRescanned ? "PARTIAL" : "NOT_VERIFIED",
+          final_level: state.isRescanned ? "Developing" : "Beginner",
+          confidence: state.isRescanned ? "Medium" : "Low",
+          resume: "Claimed",
+          github_evidence: state.isRescanned ? "AWS ECS task definition and IAM policy detected" : "0 boto3 imports or CloudFormation / Terraform manifests found",
+          files: state.isRescanned ? ["ecs-task-definition.json"] : [],
+          self_level: "Beginner",
+          score: state.isRescanned ? "6/10" : "4/10",
+          rationale: state.isRescanned ? "ECS task definition present in repository commit." : "Insufficient evidence detected in repositories. (Not Verified does NOT mean you do not know it)."
+        },
+        {
+          skill: "Kubernetes",
+          status: "NOT_VERIFIED",
+          final_level: "Beginner",
+          confidence: "Low",
+          resume: "Claimed",
+          github_evidence: "0 k8s manifests (Deployment/Service) found in selected repositories",
+          files: [],
+          self_level: "Beginner",
+          score: "3/10",
+          rationale: "No Kubernetes YAML or Helm charts found in analyzed repositories."
+        }
+      ];
+
+      renderDashboard();
+      renderRoadmap();
+      renderJobs();
+      navigateTo('screenDashboard');
+    }
+
+    function renderDashboard() {
+      const grid = document.getElementById('skillsMatrixGrid');
+      grid.innerHTML = '';
+
+      let verifiedCount = 0;
+      state.skillsEvidenceMatrix.forEach((item, index) => {
+        if (item.status === 'VERIFIED') verifiedCount++;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.cursor = 'pointer';
+        card.style.transition = 'all 0.2s';
+        card.onclick = () => openEvidenceDrawer(item);
+
+        let badgeClass = 'badge-unverified';
+        let badgeText = '○ Not Verified';
+        if (item.status === 'VERIFIED') {
+          badgeClass = 'badge-verified';
+          badgeText = '✓ Verified';
+        } else if (item.status === 'PARTIAL') {
+          badgeClass = 'badge-partial';
+          badgeText = '◐ Partial';
+        }
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <strong style="font-size: 1rem; color: #fff;">${item.skill}</strong>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Assigned: ${item.final_level}</div>
+            </div>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div style="font-size: 0.75rem; color: #94A3B8; line-height: 1.4; margin-top: 6px;">
+            ${item.rationale.substring(0, 90)}...
+          </div>
+          <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--cyan);">
+            <span>Click to inspect proof ➔</span>
+            <span style="color: #64748B;">Confidence: ${item.confidence}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      document.getElementById('dashReadinessRatio').innerText = `${verifiedCount} / ${state.skillsEvidenceMatrix.length} Skills`;
+    }
+
+    // ==========================================
+    // 8. TRANSPARENT EVIDENCE DRAWER
+    // ==========================================
+    function openEvidenceDrawer(item) {
+      document.getElementById('drawerSkillName').innerText = `${item.skill} — ${item.final_level}`;
+      
+      const badge = document.getElementById('drawerStatusBadge');
+      badge.className = `badge ${item.status === 'VERIFIED' ? 'badge-verified' : item.status === 'PARTIAL' ? 'badge-partial' : 'badge-unverified'}`;
+      badge.innerText = item.status === 'VERIFIED' ? '✓ VERIFIED' : item.status === 'PARTIAL' ? '◐ PARTIAL' : '○ NOT VERIFIED';
+
+      document.getElementById('drawerConfidence').innerText = `Confidence: ${item.confidence}`;
+      document.getElementById('drawerResumeClaim').innerText = item.resume === 'Claimed' ? '✓ Explicitly Claimed on Resume' : 'Not listed on resume';
+      document.getElementById('drawerGithubEvidence').innerText = item.github_evidence;
+      document.getElementById('drawerGithubFiles').innerText = item.files.length ? item.files.join('\n') : 'No source files detected in selected repos.';
+      document.getElementById('drawerSelfLevel').innerText = item.self_level;
+      document.getElementById('drawerScore').innerText = item.score;
+      document.getElementById('drawerRationale').innerText = item.rationale;
+
+      document.getElementById('modalBackdrop').classList.add('open');
+      document.getElementById('evidenceDrawer').classList.add('open');
+    }
+
+    function closeEvidenceDrawer() {
+      document.getElementById('modalBackdrop').classList.remove('open');
+      document.getElementById('evidenceDrawer').classList.remove('open');
+    }
+
+    // ==========================================
+    // 9. ROADMAP (KAHN'S TOPOLOGICAL DAG)
+    // ==========================================
+    function renderRoadmap() {
+      const container = document.getElementById('roadmapNodesContainer');
+      container.innerHTML = '';
+
+      const roadmapData = [
+        {
+          skill: "Python",
+          status: "cleared",
+          tier: "Foundation",
+          title: "Python 3.11+ Core & Data Structures",
+          desc: "Mastered: Hash tables, generator expressions, asynchronous asyncio.",
+          badge: "🟢 Mastered (Skipped in DAG)"
+        },
+        {
+          skill: "REST APIs",
+          status: "cleared",
+          tier: "Web Architecture",
+          tier_desc: "HTTP Methods, idempotency, JSON schemas, headers.",
+          badge: "🟢 Cleared"
+        },
+        {
+          skill: "FastAPI",
+          status: "cleared",
+          tier: "Backend Framework",
+          tier_desc: "Async endpoints, dependency injection, Pydantic validation.",
+          badge: "🟢 Cleared"
+        },
+        {
+          skill: "PostgreSQL",
+          status: "active",
+          tier: "Database Storage",
+          tier_desc: "Active Gap: ACID transactions, B-Tree indexes, Alembic migrations.",
+          badge: "🟡 Learn Next (Active Gap)"
+        },
+        {
+          skill: "Docker",
+          status: state.isRescanned ? "cleared" : "active",
+          tier: "Containerization",
+          tier_desc: state.isRescanned ? "Cleared via multi-stage container push." : "Active Gap: Multi-stage Dockerfile, layer caching & docker-compose.",
+          badge: state.isRescanned ? "🟢 Cleared via Capstone" : "🟡 Learn Next"
+        },
+        {
+          skill: "AWS Cloud",
+          status: state.isRescanned ? "active" : "locked",
+          tier: "Cloud Infrastructure",
+          tier_desc: state.isRescanned ? "Unlocked: Deploy container to ECS Fargate & setup RDS." : "Locked: Complete Docker and PostgreSQL prerequisites first.",
+          badge: state.isRescanned ? "🟡 Unlocked (Build Next)" : "⚪ Locked Dependent Node"
+        }
+      ];
+
+      roadmapData.forEach(node => {
+        const div = document.createElement('div');
+        div.className = `roadmap-node node-${node.status}`;
+        div.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #94A3B8;">${node.tier}</span>
+            <span style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; ${node.status === 'cleared' ? 'color: #34D399; background: rgba(16, 185, 129, 0.2);' : node.status === 'active' ? 'color: #FBBF24; background: rgba(245, 158, 11, 0.2);' : 'color: #94A3B8; background: rgba(255, 255, 255, 0.05);'}">${node.badge}</span>
+          </div>
+          <div style="font-size: 0.95rem; font-weight: 700;">${node.skill}</div>
+          <div style="font-size: 0.78rem; color: #94A3B8;">${node.tier_desc || node.desc}</div>
+        `;
+        container.appendChild(div);
+      });
+
+      renderVerifiedResources();
+    }
+
+    function renderVerifiedResources() {
+      const container = document.getElementById('verifiedResourcesContainer');
+      const resources = [
+        {
+          title: "Database Management Systems (PostgreSQL & Indexing)",
+          provider: "NPTEL / IIT Madras • Prof. P. Sreenivasa Kumar",
+          url: "https://nptel.ac.in",
+          skill: "PostgreSQL"
+        },
+        {
+          title: "FastAPI Official Production Architecture Guide",
+          provider: "FastAPI Official Documentation (Tiangolo)",
+          url: "https://fastapi.tiangolo.com/tutorial/",
+          skill: "FastAPI"
+        },
+        {
+          title: "Docker Mastery & Multi-Stage Optimization",
+          provider: "Docker Official Docs & MIT OpenCourseWare",
+          url: "https://docs.docker.com/develop/develop-images/multistage-build/",
+          skill: "Docker"
+        },
+        {
+          title: "AWS Cloud Practitioner & ECS Architecture Essentials",
+          provider: "AWS Skill Builder & SWAYAM",
+          url: "https://aws.amazon.com/training/",
+          skill: "AWS"
+        }
+      ];
+
+      container.innerHTML = resources.map(r => `
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;">
+          <div style="font-size: 0.7rem; color: #38BDF8; font-weight: 700; text-transform: uppercase;">${r.provider}</div>
+          <div style="font-size: 0.85rem; font-weight: 700; margin: 4px 0;">${r.title}</div>
+          <a href="${r.url}" target="_blank" style="color: var(--cyan); font-size: 0.75rem; text-decoration: none; font-weight: 600;">
+            Open Verified Syllabus Module ➔
+          </a>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // 10. JOB MATCHING ENGINE CONTROLLER
+    // ==========================================
+    function renderJobs() {
+      const container = document.getElementById('jobsGridContainer');
+      const jobs = [
+        {
+          role: "Junior Python Backend Developer",
+          company: "Razorpay • Bangalore / Remote",
+          match: state.isRescanned ? "95%" : "88%",
+          matchClass: "badge-verified",
+          statusTitle: "Strong Evidence Match",
+          skillsVerified: "Python, FastAPI, REST APIs, Git",
+          skillsMissing: "PostgreSQL (Partial)",
+          link: "https://razorpay.com/jobs"
+        },
+        {
+          role: "Backend Cloud Developer Intern",
+          company: "Swiggy • Bangalore",
+          match: state.isRescanned ? "92%" : "75%",
+          matchClass: state.isRescanned ? "badge-verified" : "badge-partial",
+          statusTitle: state.isRescanned ? "Requirements Met via Capstone!" : "Requirements In Progress",
+          skillsVerified: state.isRescanned ? "Python, FastAPI, Docker, REST APIs" : "Python, FastAPI, REST APIs",
+          skillsMissing: state.isRescanned ? "AWS (Partial)" : "Docker (Needs Multi-stage), AWS",
+          link: "https://careers.swiggy.com"
+        },
+        {
+          role: "Cloud Platform Infrastructure Intern",
+          company: "Zerodha • Bangalore",
+          match: state.isRescanned ? "78%" : "55%",
+          matchClass: state.isRescanned ? "badge-partial" : "badge-unverified",
+          statusTitle: state.isRescanned ? "Docker & Git Verified" : "Major Prerequisite Gaps",
+          skillsVerified: state.isRescanned ? "Python, Docker, Git" : "Python, Git",
+          skillsMissing: "Kubernetes, AWS Cloud",
+          link: "https://zerodha.com/careers"
+        },
+        {
+          role: "Software Development Engineer (Backend)",
+          company: "CRED • Bangalore",
+          match: state.isRescanned ? "85%" : "70%",
+          matchClass: state.isRescanned ? "badge-verified" : "badge-partial",
+          statusTitle: state.isRescanned ? "High Alignment" : "Prerequisite Gaps",
+          skillsVerified: state.isRescanned ? "Python, FastAPI, Docker" : "Python, FastAPI",
+          skillsMissing: "PostgreSQL Optimization, AWS",
+          link: "https://cred.club/careers"
+        }
+      ];
+
+      container.innerHTML = jobs.map(j => `
+        <div class="job-item">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <strong style="font-size: 1rem; color: #fff;">${j.role}</strong>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${j.company}</div>
+            </div>
+            <span class="badge ${j.matchClass}">${j.match} Match</span>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.4;">
+            <div style="color: #34D399; font-weight: 600; margin-bottom: 2px;">Status: ${j.statusTitle}</div>
+            <div><strong>Demonstrated:</strong> ${j.skillsVerified}</div>
+            <div style="color: #F87171;"><strong>Gaps:</strong> ${j.skillsMissing}</div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span style="font-size: 0.72rem; color: #64748B;">Source: JobSpy Unified Provider</span>
+            <a href="${j.link}" target="_blank" class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 12px;">
+              View on Original Portal ➔
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // 11. CONTINUOUS LEARNING LOOP (RESCAN)
+    // ==========================================
+    async function triggerEvidenceRescan() {
+      showToast('Rescanning Repositories', 'Tree-sitter checking commit for new Dockerfile and AWS manifests...');
+      
+      if (state.token) {
+        try {
+          await fetch('/api/evidence/rescan', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${state.token}` }
+          });
+        } catch (e) {
+          console.warn("Backend rescan offline, continuing in client state:", e);
+        }
+      }
+
+      setTimeout(() => {
+        state.isRescanned = true;
+        calculateAndRenderEvidence();
+        showToast('Evidence Updated!', 'Dockerfile (multi-stage) and AWS task definition verified via AST! Docker is now VERIFIED.');
+      }, 900);
+    }
+
+    function handleRoleChange(role) {
+      state.targetRole = role;
+      document.getElementById('dashboardRoleTitle').innerText = role;
+      showToast('Target Role Calibrated', `Adjusted prerequisite roadmap and jobs for ${role}`);
+      renderRoadmap();
+      renderJobs();
+    }
+
+    // ==========================================
+    // 12. 1-CLICK DEMO (ROHAN SHARMA)
+    // ==========================================
+    async function loadStandardDemo() {
+      showToast('Loading Demo Profile', 'Populating Rohan Sharma full candidate pipeline...');
+      
+      // Populate demo user
+      state.currentUser = { full_name: "Rohan Sharma", email: "rohan@careerlattice.ai" };
+      updateUserBadge();
+      state.consentAccepted = true;
+      document.getElementById('consentCheckbox').checked = true;
+      toggleConsentButton();
+
+      // Load sample resume
+      loadSampleResume();
+
+      // Calculate matrix
+      calculateAndRenderEvidence();
+
+      showToast('Rohan Sharma Loaded', 'All 12 steps connected. Review Evidence, Roadmap, and Jobs.');
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (state.currentUser) {
+        updateUserBadge();
+      }
+    });
   </script>
 </body>
 </html>

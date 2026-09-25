@@ -1,0 +1,134 @@
+{
+  "questions": [
+    {
+      "id": "py_mcq_1",
+      "skill": "Python",
+      "type": "MCQ",
+      "level": "Beginner",
+      "question": "Which Python built-in data structure provides average O(1) time complexity for key lookups?",
+      "options": ["A. List", "B. Tuple", "C. Dictionary", "D. Deque"],
+      "correct_answer": "C",
+      "explanation": "Python dictionaries are implemented using open-addressing hash tables, providing average O(1) amortized lookup."
+    },
+    {
+      "id": "py_ar_1",
+      "skill": "Python",
+      "type": "Assertion-Reason",
+      "level": "Intermediate",
+      "question": "Assertion: Python lists have O(1) amortized time complexity when appending elements.\nReason: Python over-allocates internal array memory slots to accommodate future growth without resizing on every append.",
+      "options": [
+        "A. Both Assertion and Reason are true, and Reason is the correct explanation of Assertion.",
+        "B. Both Assertion and Reason are true, but Reason is not the correct explanation of Assertion.",
+        "C. Assertion is true, but Reason is false.",
+        "D. Assertion is false, but Reason is true."
+      ],
+      "correct_answer": "A",
+      "explanation": "Python list append is amortized O(1) because lists reserve extra capacity using a geometric resizing factor."
+    },
+    {
+      "id": "py_code_out_1",
+      "skill": "Python",
+      "type": "Code Output",
+      "level": "Intermediate",
+      "question": "What is the output of the following Python snippet?\n\ndef extend_list(val, list_arg=[]):\n    list_arg.append(val)\n    return list_arg\n\nlist1 = extend_list(10)\nlist2 = extend_list(123, [])\nlist3 = extend_list('a')\nprint(list1, list3)",
+      "options": [
+        "A. [10] ['a']",
+        "B. [10, 'a'] [10, 'a']",
+        "C. [10, 123] [10, 123, 'a']",
+        "D. [10, 'a'] [123, 'a']"
+      ],
+      "correct_answer": "B",
+      "explanation": "Default arguments in Python are evaluated once when the function is defined, making mutable defaults like lists shared across calls."
+    },
+    {
+      "id": "fastapi_scenario_1",
+      "skill": "FastAPI",
+      "type": "Scenario-Based",
+      "level": "Intermediate",
+      "question": "You have a FastAPI endpoint performing a blocking synchronous database call using `psycopg2` inside an `async def` route. What occurs under high concurrent traffic?",
+      "options": [
+        "A. FastAPI automatically offloads it to a background thread pool.",
+        "B. The primary asyncio event loop is blocked, causing latency spikes for all concurrent client requests.",
+        "C. Uvicorn terminates the worker process with an EventLoopBlocked exception.",
+        "D. Requests are buffered in Redis automatically without latency impact."
+      ],
+      "correct_answer": "B",
+      "explanation": "Defining a route with `async def` tells FastAPI to run it on the main event loop thread. A blocking call in `async def` freezes the entire loop. To use blocking code safely, define it as regular `def` so FastAPI runs it in an external thread pool, or use an async driver like `asyncpg`."
+    },
+    {
+      "id": "fastapi_debug_1",
+      "skill": "FastAPI",
+      "type": "Debugging",
+      "level": "Developing",
+      "question": "Identify the bug in this FastAPI route:\n\n@app.post('/items')\ndef create_item(item: dict):\n    if item['price'] < 0:\n        return {'error': 'Invalid price'}\n    return {'status': 'saved', 'data': item}\n\nWhat is the primary architectural deficiency?",
+      "options": [
+        "A. The route decorator must be @app.put.",
+        "B. It accepts an unvalidated raw dict instead of a strongly-typed Pydantic BaseModel with field validation.",
+        "C. FastAPI functions must always return an HTTP 201 status code explicitly.",
+        "D. Dictionaries cannot be serialized to JSON by FastAPI."
+      ],
+      "correct_answer": "B",
+      "explanation": "Using raw `dict` bypasses FastAPI's core capabilities: schema validation, automatic 422 error generation, and OpenAPI Swagger documentation generation via Pydantic."
+    },
+    {
+      "id": "docker_conceptual_1",
+      "skill": "Docker",
+      "type": "Conceptual",
+      "level": "Beginner",
+      "question": "What is the fundamental architectural difference between a Docker container and a traditional Virtual Machine (VM)?",
+      "options": [
+        "A. Virtual Machines use Dockerfiles; containers use ISO disk images.",
+        "B. Containers share the host OS kernel and isolate user spaces via cgroups and namespaces, whereas VMs run a full guest OS on top of a hypervisor.",
+        "C. Containers cannot write to disk, while VMs have persistent storage.",
+        "D. Containers only run on Linux, while VMs only run on Windows."
+      ],
+      "correct_answer": "B",
+      "explanation": "Containers virtualize at the operating system level, sharing the host kernel with lightweight namespace isolation, making them far faster and lighter than hypervisor-managed VMs."
+    },
+    {
+      "id": "docker_debug_1",
+      "skill": "Docker",
+      "type": "Debugging",
+      "level": "Intermediate",
+      "question": "Analyze this Dockerfile for a FastAPI backend:\n\nFROM python:3.11\nWORKDIR /app\nCOPY . /app\nRUN pip install -r requirements.txt\nCMD ['uvicorn', 'main:app', '--host', '0.0.0.0']\n\nWhy does this build inefficiently during iterative development?",
+      "options": [
+        "A. Python 3.11 is not supported in Docker.",
+        "B. `COPY . /app` is executed before `RUN pip install`, which invalidates the Docker build cache for pip dependencies whenever any code file changes.",
+        "C. The CMD array must use double quotes instead of single quotes only.",
+        "D. WORKDIR must be created using `mkdir -p` first."
+      ],
+      "correct_answer": "B",
+      "explanation": "To maximize Docker layer caching, `COPY requirements.txt .` and `RUN pip install -r requirements.txt` must precede `COPY . /app`, ensuring expensive package installs only rerun when requirements change."
+    },
+    {
+      "id": "sql_scenario_1",
+      "skill": "PostgreSQL",
+      "type": "Scenario-Based",
+      "level": "Intermediate",
+      "question": "In PostgreSQL, a query `SELECT * FROM orders WHERE user_id = 450 ORDER BY created_at DESC;` runs slowly on a 50-million-row table despite having a B-tree index on `user_id`. What composite index will optimize this query?",
+      "options": [
+        "A. CREATE INDEX idx_orders ON orders (created_at);",
+        "B. CREATE INDEX idx_orders ON orders (user_id, created_at DESC);",
+        "C. CREATE INDEX idx_orders ON orders (order_id, user_id);",
+        "D. A B-tree index cannot optimize sorting operations."
+      ],
+      "correct_answer": "B",
+      "explanation": "A composite index on `(user_id, created_at DESC)` allows PostgreSQL to seek directly to the user's records and read them in already-sorted order, avoiding an in-memory Sort/Top-N Heap Sort."
+    },
+    {
+      "id": "aws_architecture_1",
+      "skill": "AWS",
+      "type": "Architecture / Practical",
+      "level": "Advanced",
+      "question": "You are deploying a containerized backend on AWS that must connect securely to an Amazon RDS PostgreSQL instance without hardcoding credentials in the Docker image. What is the recommended AWS architectural pattern?",
+      "options": [
+        "A. Store database credentials in a public S3 bucket and fetch via curl on container boot.",
+        "B. Attach an IAM Task Execution Role to ECS and inject credentials at runtime using AWS Secrets Manager or Systems Manager Parameter Store.",
+        "C. Commit credentials into `.env.production` inside the git repository.",
+        "D. Expose the PostgreSQL port 5432 publicly to the internet with a weak password."
+      ],
+      "correct_answer": "B",
+      "explanation": "Using AWS Secrets Manager integrated with ECS Task Execution IAM roles provides automated rotation, audit logging via CloudTrail, and secure environment variable injection without hardcoded secrets."
+    }
+  ]
+}
