@@ -117,32 +117,67 @@ All technical specifications, pitch decks, and implementation guides are organiz
 | 📄 **[`docs/04_SMALLEST_WINNING_MVP.md`](docs/04_SMALLEST_WINNING_MVP.md)** | Minimal viable prototype execution guide, 30-node demo graph, and sample payload schemas. |
 | 📄 **[`docs/05_PHYSICS_ROBOTICS_CAPSTONE_SPEC.md`](docs/05_PHYSICS_ROBOTICS_CAPSTONE_SPEC.md)** | Detailed specification for the Physics-to-Robotics capstone project (*Autonomous Mobile Robot Simulator*) and AST verification rules. |
 | 📄 **[`docs/06_SIH_PRESENTATION_DECK_12_SLIDES.md`](docs/06_SIH_PRESENTATION_DECK_12_SLIDES.md)** | Master 12-slide pitch deck narrative + copy-paste prompt for Gamma (gamma.app). |
-| 📄 **[`docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md`](docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md)** | Render web service deployment, Supabase cloud database schema & Gemini AI adaptive evaluation engine. |
+| 📄 **[`docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md`](docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md)** | Render web service deployment, cloud database schema & Gemini AI adaptive evaluation engine. |
+| 📄 **[`docs/09_ACTUAL_TECH_STACK_AND_ARCHITECTURE.md`](docs/09_ACTUAL_TECH_STACK_AND_ARCHITECTURE.md)** | Comprehensive audit and architectural breakdown of the actual technologies running in the live prototype. |
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Actual Prototype Tech Stack & Implementation Matrix
 
-* **Frontend**: React 19, TypeScript, Tailwind CSS, `@xyflow/react` (React Flow), Lucide Icons
-* **Backend**: FastAPI (Python 3.11), Pydantic v2, Uvicorn
-* **Databases**:
-  * **Neo4j 5.x**: Skill prerequisite graph & ontology
-  * **Qdrant**: Vector similarity search for skill normalization
-  * **PostgreSQL 16**: Relational user state, college metadata, and cached roadmaps
-* **AI & NLP**:
-  * `Tree-sitter` (AST multi-language code inspector)
-  * `PyMuPDF` (deterministic PDF resume extractor)
-  * `SkillNER` + `SpaCy` (Skill entity recognition)
-  * `BGE-small-en-v1.5` running via ONNX Runtime (fast, local CPU embeddings)
-* **Job Intelligence**:
-  * `JobSpy` (Open-source multi-portal scraper for LinkedIn, Indeed, Glassdoor, Naukri)
+### 🌟 Core Technologies (At a Glance)
+- **Backend & API**: Python 3.11+ • **FastAPI** • **Uvicorn** • **Pydantic**
+- **Production Database**: **PostgreSQL 16** (Render Cloud DB) • **SQLAlchemy 2.0 ORM** • **Alembic** (with SQLite local fallback)
+- **Frontend & UI**: **Vanilla HTML5** • **CSS3** • **Vanilla JavaScript ES6+** • **SPA-Style Navigation**
+- **AI & Adaptive Testing**: **Google Gemini 1.5 Flash** (dynamic scenario-based assessments)
+- **Code Polygraph & AST**: **Python AST (`ast.parse`, `ast.walk`)** • **GitHub API + HTTPX**
+- **Skill Graph & Roadmapping**: **NetworkX `DiGraph`** • **`nx.ancestors()`** • **Topological Sorting**
+- **Resume Extraction**: **PyMuPDF / Fitz** • **Regex Taxonomy**
+- **Security & Auth**: **Bearer Token Authentication** • **PBKDF2-HMAC-SHA256** • **Python `secrets`**
+- **Hosting & Deployment**: **Render** (Production Backend & PostgreSQL) • **GitHub Pages** (Static Frontend)
 
 ---
 
-## 👥 Hackathon Team Roles (6 Members)
-1. **Frontend Lead**: React 19 UI & React Flow graph canvas
-2. **Backend Lead**: FastAPI gateway, Docker Compose & PostgreSQL
-3. **AI / NLP Engineer**: SpaCy SkillNER & Qdrant vector normalizer
-4. **Graph Architect**: Neo4j ontology seeding & Kahn's topological sort
-5. **Code Inspector**: GitHub Tree-sitter AST dependency extraction
-6. **Product & Presentation Lead**: NPTEL curriculum indexing, demo story & judging defense
+### 📋 Complete Implementation Table
+
+| Area | Actual Technology / Term | Implementation Details |
+|:---|:---|:---|
+| **Frontend** | **Vanilla HTML5** | Semantic structure, screen cards, and accessible forms |
+| **Styling** | **CSS3** | Modern dark-mode palette, CSS custom properties, responsive layout |
+| **Frontend logic** | **Vanilla JavaScript ES6+** | Lightweight state store, API bridge, DOM reactivity |
+| **UI architecture** | **SPA-style navigation** | Single Page Application with history-aware screen switches |
+| **Backend** | **Python + FastAPI** | Asynchronous API server, dependency injection, endpoint modularity |
+| **API server** | **Uvicorn** | High-concurrency ASGI server hosting live production and local dev |
+| **Validation** | **Pydantic** | Strict input/output schema validation and type enforcement |
+| **Database ORM** | **SQLAlchemy 2.0** | Relational mapping, foreign key cascades, and connection pooling |
+| **Database migration** | **Alembic** | Database schema versioning and migration framework |
+| **Production DB** | **PostgreSQL 16** | Cloud relational database instance hosted on Render |
+| **Local DB fallback** | **SQLite** | Zero-config file database for local offline execution |
+| **Authentication** | **Bearer Token Authentication** | Secure token-based session auth with per-user data segregation |
+| **Password security** | **PBKDF2-HMAC-SHA256** | 100,000-iteration cryptographic hash derivation |
+| **Salt generation** | **Python `secrets`** | Cryptographically secure random salts per user account |
+| **Resume PDF parsing** | **PyMuPDF / Fitz** | High-speed binary PDF text extraction |
+| **Resume skill extraction** | **Regex / Regular Expressions** | Boundary-enforced taxonomy keyword extraction |
+| **GitHub integration** | **GitHub API + HTTPX** | Asynchronous repository fetching, URL parsing, and manifest lookup |
+| **Code analysis** | **Python AST (`ast.parse`, `ast.walk`)** | Code-Grounding Polygraph inspecting imports, decorators, and classes |
+| **Evidence engine** | **Rule-based / deterministic evidence aggregation** | 4-tier evidence matrix (Verified, Partial, Unverified) |
+| **Skill graph** | **NetworkX `DiGraph`** | Directed Acyclic Graph modeling hierarchical skill dependencies |
+| **Graph traversal** | **`nx.ancestors()`** | Traverses prerequisite trees to find missing foundations |
+| **Roadmap ordering** | **Topological sorting** | Orders gap skills into progressive, achievable milestones |
+| **AI** | **Google Gemini 1.5 Flash** | Dynamic scenario-based adaptive question generation |
+| **Adaptive assessment** | **Dynamic scenario questions via Gemini** | Tailored situational multiple-choice evaluation |
+| **Job matching** | **Set intersection / exact skill matching** | Compares verified skills with industry job catalog requirements |
+| **API testing** | **Pytest-style test modules / E2E tests** | 16-test unit suite + 18-test live production acceptance suite |
+| **CORS** | **FastAPI CORS middleware** | Cross-Origin headers enabling GitHub Pages to call Render API |
+| **Deployment** | **Render** | Production Web Service and managed PostgreSQL 16 instance |
+| **Frontend hosting** | **GitHub Pages** | Static edge frontend hosting with automated git sync |
+
+---
+
+## 👥 Hackathon Team Roles
+1. **AI Engineer & Cybersecurity Systems Architect**: Sivabalan T (SENTINEL / SHIELD AI, AST Sandbox & In-RAM Tokenizer)
+2. **Backend Lead**: FastAPI gateway, PostgreSQL 16 schema & Uvicorn deployment
+3. **Frontend & UX**: Responsive SPA architecture, Evidence Matrix & Roadmap Canvas
+4. **Graph & Ontology**: NetworkX prerequisite DAG & Topological Sort
+5. **Code Inspector**: Python AST inspection & GitHub API integration
+6. **Product & Presentation**: SIH SE-02 compliance, pitch narrative & judging defense
+
