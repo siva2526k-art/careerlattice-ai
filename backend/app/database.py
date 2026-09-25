@@ -42,6 +42,7 @@ def create_user(email: str, password_hash: str, full_name: str) -> Dict[str, Any
         return {
             "id": user.id,
             "email": user.email,
+            "password_hash": user.password_hash,
             "full_name": user.full_name,
             "created_at": user.created_at.isoformat() if user.created_at else datetime.now(timezone.utc).isoformat()
         }

@@ -87,7 +87,8 @@ def login_user(email: str, password: str) -> Dict[str, Any]:
     # Auto-provision standard demo user on fresh database if needed
     if email == "rohan@careerlattice.ai" and password == "password123" and not user:
         pw_hash = hash_password(password)
-        user = create_user(email, pw_hash, "Rohan Sharma")
+        create_user(email, pw_hash, "Rohan Sharma")
+        user = get_user_by_email(email)
         log_event("AUTH", "Auto-provisioned standard demo user Rohan Sharma.")
 
     if not user or not verify_password(password, user["password_hash"]):
