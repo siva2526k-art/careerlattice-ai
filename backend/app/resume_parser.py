@@ -1,4 +1,10 @@
-import fitz  # PyMuPDF
+try:
+    import fitz  # PyMuPDF
+    HAVE_FITZ = True
+except ImportError:
+    fitz = None
+    HAVE_FITZ = False
+
 import re
 import json
 from typing import Dict, Any, List, Set
@@ -23,14 +29,21 @@ def sanitize_pii(text: str) -> str:
 
 def parse_resume_pdf(pdf_bytes: bytes, filename: str = "resume.pdf") -> Dict[str, Any]:
     """
-    Extracts text and structured sections from a PDF file using PyMuPDF.
+    Extracts text and structured sections from a PDF file using PyMuPDF (or raw stream fallback).
     Categorizes skills into programming languages, frameworks, databases, cloud, and tools.
     """
     log_event("RESUME", f"Starting extraction for {filename} ({len(pdf_bytes)} bytes)")
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     full_text = ""
-    for page in doc:
-        full_text += page.get_text() + "\n"
+    if HAVE_FITZ:
+        try:
+            doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+            for page in doc:
+                full_text += page.get_text() + "\n"
+        except Exception as e:
+            log_event("RESUME", f"PyMuPDF parse failed: {e}, falling back to stream decode.")
+            full_text = pdf_bytes.decode('latin1', errors='ignore')
+    else:
+        full_text = pdf_bytes.decode('latin1', errors='ignore')
     
     clean_text = sanitize_pii(full_text)
     

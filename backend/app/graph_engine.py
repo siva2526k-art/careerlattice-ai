@@ -1,8 +1,94 @@
 import json
-import networkx as nx
 from typing import Dict, Any, List, Set, Optional
 from pathlib import Path
 from backend.app.config import log_event
+
+try:
+    import networkx as nx
+    HAVE_NX = True
+except ImportError:
+    nx = None
+    HAVE_NX = False
+
+class FallbackDiGraph:
+    """Pure Python DAG implementation matching NetworkX interface."""
+    def __init__(self):
+        self.nodes = {}
+        self.adj = {}
+        self.pred = {}
+        
+    def add_node(self, node, **attrs):
+        self.nodes[node] = attrs
+        if node not in self.adj:
+            self.adj[node] = set()
+        if node not in self.pred:
+            self.pred[node] = set()
+            
+    def add_edge(self, u, v):
+        self.add_node(u)
+        self.add_node(v)
+        self.adj[u].add(v)
+        self.pred[v].add(u)
+        
+    def predecessors(self, node):
+        return list(self.pred.get(node, []))
+        
+    def successors(self, node):
+        return list(self.adj.get(node, []))
+        
+    def __contains__(self, node):
+        return node in self.nodes
+        
+    def subgraph(self, node_list):
+        sub = FallbackDiGraph()
+        nodes_set = set(node_list)
+        for n in nodes_set:
+            if n in self.nodes:
+                sub.add_node(n, **self.nodes[n])
+        for u in nodes_set:
+            for v in self.adj.get(u, set()):
+                if v in nodes_set:
+                    sub.add_edge(u, v)
+        return sub
+        
+    def copy(self):
+        return self
+
+def get_ancestors(G, node) -> Set[str]:
+    """Finds all ancestors of a node in graph G."""
+    if HAVE_NX and hasattr(nx, 'ancestors'):
+        return nx.ancestors(G, node)
+    visited = set()
+    queue = list(G.predecessors(node))
+    while queue:
+        curr = queue.pop(0)
+        if curr not in visited:
+            visited.add(curr)
+            queue.extend(G.predecessors(curr))
+    return visited
+
+def kahn_topological_sort(G) -> List[str]:
+    """Pure Python Kahn's topological sort algorithm."""
+    if HAVE_NX and hasattr(nx, 'topological_sort'):
+        try:
+            return list(nx.topological_sort(G))
+        except Exception:
+            pass
+    # In-degree map
+    in_degree = {n: len(G.predecessors(n)) for n in G.nodes}
+    queue = [n for n, deg in in_degree.items() if deg == 0]
+    result = []
+    while queue:
+        u = queue.pop(0)
+        result.append(u)
+        for v in G.successors(u):
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+    for n in G.nodes:
+        if n not in result:
+            result.append(n)
+    return result
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
@@ -14,10 +100,10 @@ def load_verified_resources():
     with open(DATA_DIR / "verified_resources.json", "r", encoding="utf-8") as f:
         return json.load(f).get("resources", {})
 
-def build_prerequisite_graph() -> nx.DiGraph:
-    """Constructs the canonical prerequisite DAG using NetworkX."""
+def build_prerequisite_graph():
+    """Constructs the canonical prerequisite DAG using NetworkX or pure Python fallback."""
     data = load_roles_and_skills()
-    G = nx.DiGraph()
+    G = nx.DiGraph() if HAVE_NX else FallbackDiGraph()
     
     # Add all skill nodes with tier & category metadata
     for skill_name, meta in data.get("skills", {}).items():
@@ -65,7 +151,7 @@ def generate_personalized_roadmap(
     for s in all_target_skills:
         needed_skills.add(s)
         if s in G:
-            ancestors = nx.ancestors(G, s)
+            ancestors = get_ancestors(G, s)
             needed_skills.update(ancestors)
 
     # 2. Extract induced subgraph for the role
@@ -73,11 +159,7 @@ def generate_personalized_roadmap(
     subgraph = G.subgraph(subgraph_nodes).copy()
     
     # 3. Apply Kahn's Topological Sort to get canonical linear sequence
-    try:
-        ordered_sequence = list(nx.topological_sort(subgraph))
-    except nx.NetworkXUnfeasible:
-        # If cycles occur, fall back to simple node list
-        ordered_sequence = list(subgraph.nodes())
+    ordered_sequence = kahn_topological_sort(subgraph)
 
     # 4. Classify node states:
     # - 'demonstrated' (Green): verified in student's code/assessment
