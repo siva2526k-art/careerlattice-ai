@@ -4,18 +4,21 @@
 > *Dynamic Skill-to-Career Knowledge Mesh & Prerequisite-Aware Learning Engine*  
 > **Target Ministry**: Ministry of Skill Development and Entrepreneurship (MSDE) / AICTE
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-brightgreen?style=for-the-badge&logo=github)](https://siva2526k-art.github.io/careerlattice-ai/)
+[![Live Demo](https://img.shields.io/badge/Production-Render_Live-brightgreen?style=for-the-badge&logo=render)](https://careerlattice-ai.onrender.com)
+[![GitHub Pages](https://img.shields.io/badge/Frontend-GitHub_Pages-blue?style=for-the-badge&logo=github)](https://siva2526k-art.github.io/careerlattice-ai/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Neo4j](https://img.shields.io/badge/Neo4j-5.x-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)](https://neo4j.com)
-[![Qdrant](https://img.shields.io/badge/Qdrant-Vector_DB-DC2626?style=for-the-badge&logo=qdrant&logoColor=white)](https://qdrant.tech)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Gemini](https://img.shields.io/badge/AI-Gemini_1.5_Flash-8E75C2?style=for-the-badge&logo=google)](https://ai.google.dev)
+[![NetworkX](https://img.shields.io/badge/Graph-NetworkX-00599C?style=for-the-badge)](https://networkx.org)
 
 ---
 
-## 🚀 Live Interactive Prototype
-Experience the live working application directly in your browser:  
-👉 **[siva2526k-art.github.io/careerlattice-ai](https://siva2526k-art.github.io/careerlattice-ai/)**
+## 🚀 Live Interactive Prototype & Production
+Experience the live working application across environments:  
+- 🌐 **Production Web App (Full Stack + PostgreSQL 16)**: **[careerlattice-ai.onrender.com](https://careerlattice-ai.onrender.com)**  
+- 📄 **Swagger Interactive API**: **[careerlattice-ai.onrender.com/docs](https://careerlattice-ai.onrender.com/docs)**  
+- ⚡ **Static Client Edge (GitHub Pages)**: **[siva2526k-art.github.io/careerlattice-ai](https://siva2526k-art.github.io/careerlattice-ai/)**
 
 ---
 
@@ -34,12 +37,12 @@ Most existing systems (and standard hackathon projects) make two fatal mistakes:
 2. **The "Resume Truth" Fallacy**: They trust whatever buzzwords are typed on a resume without verifying actual technical competency.
 
 ### 🌟 CareerLattice AI's Multi-Artifact Grounded Architecture
-* **Code-Grounding Polygraph (AST Analysis)**: Inspects student GitHub repositories using open-source **Tree-sitter** AST parsers to verify whether imported packages, project architecture, and commits substantiate resume claims.
-* **Topological Prerequisite Graph (Neo4j DAG)**: Employs **Kahn’s topological sort** on an open skill ontology (ESCO/O*NET), ensuring students learn foundational prerequisites *before* specialized frameworks (e.g., mastering kinematics before robot simulation).
-* **Open-Source Job Ingestion**: Leverages the open-source **JobSpy** library to aggregate live listings across LinkedIn, Indeed, Glassdoor, and Naukri ethically without expensive proprietary APIs.
-* **Prescribed Industrial Capstones**: Suggests industry-grade portfolio projects (e.g., *Autonomous Mobile Robot Physics Simulator*) that auto-verify via GitHub webhooks upon commit.
-* **Zero Hallucination Guarantee**: Course links are fetched deterministically from curated public repositories (**NPTEL, SWAYAM, MIT OCW, official technical documentation**).
-* **Institutional TPO View**: Allows college placement officers to upload department syllabi to uncover systemic institutional curriculum gaps against real-time industry demand.
+* **Code-Grounding Polygraph (Native AST Analysis)**: Inspects student GitHub repositories using Python's native AST parser (`ast.parse`, `ast.walk`) and manifest analysis (`requirements.txt`, `package.json`, `Dockerfile`) to verify whether imported packages, route decorators, async I/O, and commits substantiate resume claims.
+* **Topological Prerequisite Graph (NetworkX DAG)**: Employs **Kahn’s topological sort** and ancestor traversal (`nx.ancestors()`) over a prerequisite skill mesh, ensuring students master foundational concepts *before* specialized frameworks (e.g., Python basics & SQL before async microservices).
+* **Multi-Factor Evidence Engine**: Aggregates resume NLP, AST code proof, candidate self-ratings, and dynamic quiz scores into a deterministic 4-tier confidence rating (**VERIFIED**, **PARTIAL**, **NOT_VERIFIED**).
+* **Dynamic Scenario Testing (Google Gemini 1.5 Flash)**: Generates tailored, situational assessment questions on the fly to test real-world problem-solving rather than rote memorization.
+* **Zero Hallucination Guarantee**: Learning links are fetched deterministically from accredited public resources (**NPTEL, SWAYAM, MIT OCW, official technical documentation**).
+* **Enterprise Persistence**: Built on a cloud-hosted **PostgreSQL 16** database with SQLAlchemy 2.0 ORM, ensuring state is securely preserved across student sessions.
 
 ---
 
@@ -60,33 +63,45 @@ To demonstrate the power of interdisciplinary engineering under **NEP 2020**, ou
 
 ```mermaid
 flowchart TD
-    subgraph INGESTION["1. Multi-Artifact Ingestion"]
-        A1[Student Resume PDF] --> B1[PyMuPDF + SpaCy SkillNER]
-        A2[GitHub Profile URL] --> B2[Tree-sitter AST Parser]
-        A3[Live Job Market Feeds] --> B3[Open-Source JobSpy Worker]
+    subgraph INGESTION["1. Multi-Artifact Ingestion Layer"]
+        A1["Student Resume PDF"] --> B1["PyMuPDF (Fitz) + Regex Taxonomy Matcher"]
+        A2["GitHub Repo / Profile URL"] --> B2["GitHub API (HTTPX) + URL Normalizer"]
+        A3["Industry Career Catalog"] --> B3["Standardized Job Role Provider (DatasetJobProvider)"]
     end
 
-    subgraph INTELLIGENCE["2. Hybrid AI & Graph Layer"]
-        B1 --> C1[Student Competency Vector]
-        B2 --> C1
-        B3 --> C2[Target Role Cluster]
-        C1 --> D1[Qdrant Canonical Normalization]
+    subgraph POLYGRAPH["2. Code-Grounding Polygraph & AST Inspection"]
+        B2 --> C1["Python AST Parser (ast.parse, ast.walk)"]
+        B2 --> C2["Manifest & Docker Inspector (requirements.txt, package.json, Dockerfile)"]
+        C1 --> D1["Implementation Proof: Imports, Decorators, AsyncDef"]
         C2 --> D1
-        D1 --> E1[(Neo4j Skill Ontology Graph)]
     end
 
-    subgraph ENGINE["3. Gap & Prerequisite Resolution"]
-        E1 --> F1[Sub-graph Delta Engine: Target minus Student]
-        F1 --> F2[Prerequisite Ancestor Traversal]
-        F2 --> F3[Kahn's Topological Sort]
+    subgraph EVALUATION["3. Multi-Factor Evidence & Adaptive AI Engine"]
+        B1 --> E1["Extracted Claimed Skills"]
+        D1 --> E2["Code AST Findings"]
+        F1["Candidate Self-Assessment"] --> E3["Confidence Calibration"]
+        G1["Google Gemini 1.5 Flash"] --> E4["Dynamic Adaptive Scenario Evaluation"]
+        E1 & E2 & E3 & E4 --> H1["Deterministic 4-Tier Evidence Engine"]
     end
 
-    subgraph OUTPUT["4. Interactive Output & Verified Learning"]
-        F3 --> G1[React Flow Interactive DAG Canvas]
-        G1 --> H1[Deep-linked NPTEL & SWAYAM Video Timestamps]
-        G1 --> H2[Official Technical Documentation]
-        G1 --> H3[Prescribed Industrial Capstone Project]
-        G1 --> H4[Direct Job Opportunities Match]
+    subgraph STORAGE["4. Persistence & Relational Data Layer"]
+        H1 --> P1[("Cloud PostgreSQL 16 (Render) / SQLite Fallback")]
+        P1 --> P2["SQLAlchemy 2.0 ORM + Alembic Migrations"]
+        P2 --> P3["Users, Consents, Evidence Records, Roadmaps, Jobs"]
+    end
+
+    subgraph GRAPH_ENGINE["5. Skill Mesh & Prerequisite Resolution"]
+        P3 --> G2["NetworkX DiGraph (Skill Ontology Mesh)"]
+        G2 --> G3["Prerequisite Discovery via nx.ancestors()"]
+        G3 --> G4["Kahn's Topological Sort (Sequential Milestones)"]
+    end
+
+    subgraph DELIVERY["6. Interactive Frontend & Career Readiness"]
+        G4 --> U1["Vanilla HTML5 + CSS3 + ES6+ SPA Canvas"]
+        U1 --> V1["Code Polygraph Evidence Matrix (Verified / Partial / Not Verified)"]
+        U1 --> V2["Adaptive Assessment Runner with Gemini Real-time Grading"]
+        U1 --> V3["Prerequisite-Aware Roadmap with NPTEL / Official Docs"]
+        U1 --> V4["Role Readiness Match % & Direct Job Application Portal"]
     end
 ```
 
