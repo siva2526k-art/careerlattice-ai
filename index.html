@@ -1284,7 +1284,14 @@
         localStorage.setItem('cl_user', JSON.stringify(data.user));
         updateUserBadge();
 
-        // Check if user already has an existing session with evidence in PostgreSQL
+        // If new registration, ALWAYS start from Step 1 (Terms & Consent)
+        if (currentAuthTab === 'register') {
+          showToast('Account Created!', `Welcome to CareerLattice, ${data.user.full_name}`);
+          navigateTo('screenConsent');
+          return;
+        }
+
+        // Login flow: Check if returning user already has completed pipeline in PostgreSQL
         try {
           const dashRes = await fetch(`${API_BASE}/api/dashboard`, { headers: getAuthHeaders() });
           if (dashRes.ok) {
@@ -1318,8 +1325,16 @@
       }
       state.token = null;
       state.currentUser = null;
+      state.consentAccepted = false;
+      state.resumeData = null;
+      state.skillsEvidenceMatrix = [];
+      state.isRescanned = false;
       localStorage.removeItem('cl_token');
       localStorage.removeItem('cl_user');
+      const consentCb = document.getElementById('consentCheckbox');
+      if (consentCb) consentCb.checked = false;
+      const btnConsentProceed = document.getElementById('btnConsentProceed');
+      if (btnConsentProceed) btnConsentProceed.disabled = true;
       updateUserBadge();
       showToast('Logged Out', 'Session ended safely. Log back in to continue.');
       navigateTo('screenAuth');
@@ -2397,6 +2412,12 @@
               if (dashData.skills && dashData.skills.length > 0) {
                 await loadDashboardFromBackend();
                 navigateTo('screenDashboard');
+                return;
+              } else if (userData.consent_accepted) {
+                navigateTo('screenResume');
+                return;
+              } else {
+                navigateTo('screenConsent');
                 return;
               }
             }

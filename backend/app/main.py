@@ -424,18 +424,13 @@ def api_calculate_evidence(user: Dict[str, Any] = Depends(get_current_user)):
 @app.get("/api/dashboard")
 def api_get_dashboard(user: Dict[str, Any] = Depends(get_current_user)):
     skills = get_user_skills(user["id"])
-    if not skills:
-        # Auto-compute if not yet computed
-        api_calculate_evidence(user)
-        skills = get_user_skills(user["id"])
-        
     verified = [s for s in skills if s["evidence_status"] == "VERIFIED"]
     partial = [s for s in skills if s["evidence_status"] == "PARTIAL"]
     unverified = [s for s in skills if s["evidence_status"] == "NOT_VERIFIED"]
     
     return {
         "user": user,
-        "demonstrated_ratio": f"{len(verified)} / {len(skills)}",
+        "demonstrated_ratio": f"{len(verified)} / {len(skills)}" if skills else "0 / 0",
         "verified_count": len(verified),
         "partial_count": len(partial),
         "unverified_count": len(unverified),
