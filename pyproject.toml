@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "careerlattice-ai"
+version = "1.0.0"
+description = "Evidence-based Skill-to-Career Readiness Platform"
+authors = [{ name = "CareerLattice Team" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "python-multipart",
+    "python-dotenv",
+    "networkx",
+    "httpx"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*"]
