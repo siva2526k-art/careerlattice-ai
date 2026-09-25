@@ -32,18 +32,16 @@ CareerLattice AI operates as a decoupled, multi-tier microservice architecture:
 ### 2.1 The Resume Parsing Channel
 * **Extraction**: PyMuPDF extracts text streams, structural headers, and dates without cloud dependencies.
 * **Skill NER**: A custom SpaCy pipeline matches candidate terms against the open ESCO 13,800+ skill dictionary.
-* **Vector Normalization**: Extracted terms are embedded via `BGE-small-en-v1.5` and mapped to canonical skill concepts in Qdrant (threshold $\ge 0.82$).
+* **Vector Normalization**: Extracted terms are embedded via `BGE-small-en-v1.5` and mapped to canonical skill concepts in Qdrant (threshold >= 0.82).
 
 ### 2.2 The GitHub AST Code-Grounding Channel
 * **Inspection**: The student supplies their GitHub profile.
 * **Shallow Clone & AST Walk**: Clones non-forked repositories (`depth=1`).
 * **Tree-sitter Parsing**: Parses language manifest files (`package.json`, `pom.xml`, `requirements.txt`, `go.mod`, `Cargo.toml`) and source code import statements.
 * **Bimodal Verification Scoring**:
-  $$\text{Confidence}(S) = \begin{cases} 
-  1.0 & \text{if claimed in resume AND found in AST import} \\
-  0.3 & \text{if claimed in resume but absent in code} \\
-  0.8 & \text{if found in active code repo but missing from resume}
-  \end{cases}$$
+  * **Score 1.0**: Claimed in resume AND verified in AST import.
+  * **Score 0.3**: Claimed in resume but absent in code repository.
+  * **Score 0.8**: Detected in active code repository but omitted from resume.
 
 ---
 
@@ -61,15 +59,15 @@ CareerLattice AI operates as a decoupled, multi-tier microservice architecture:
 
 ### 3.2 Topological Sorting Algorithm (Kahn's Algorithm)
 Given:
-* $V_R$: Nodes required for target career role $R$
-* $V_U$: Nodes verified in user baseline with confidence $\ge 0.70$
-* Delta set: $V_\Delta = V_R \setminus V_U$
+* **V_R**: Nodes required for target career role R
+* **V_U**: Nodes verified in user baseline with confidence >= 0.70
+* **Delta set**: V_Delta = V_R minus V_U
 
 **Algorithm Execution**:
-1. Query Neo4j for all ancestors: $\text{Ancestors}(V_\Delta) = \{a \mid a \xrightarrow{\text{PREREQUISITE\_OF}^*} v, v \in V_\Delta\}$.
-2. Expanded learning set: $V_E = (V_\Delta \cup \text{Ancestors}(V_\Delta)) \setminus V_U$.
-3. Compute in-degree for all $v \in V_E$ strictly within the induced subgraph.
-4. Enqueue nodes with in-degree $= 0$.
+1. Query Neo4j for all ancestors: Ancestors(V_Delta) = all nodes with a directed prerequisite chain to any node in V_Delta.
+2. Expanded learning set: V_Expanded = (V_Delta + Ancestors(V_Delta)) minus V_U.
+3. Compute in-degree for all nodes in V_Expanded strictly within the induced subgraph.
+4. Enqueue nodes with in-degree = 0.
 5. Repeatedly dequeue nodes into the ordered roadmap sequence, decrementing child in-degrees.
 6. Return a guaranteed Directed Acyclic Graph (DAG) with **0 circular dependency deadlocks**.
 

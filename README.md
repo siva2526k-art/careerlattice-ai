@@ -54,7 +54,7 @@ flowchart TD
     end
 
     subgraph ENGINE["3. Gap & Prerequisite Resolution"]
-        E1 --> F1[Sub-graph Delta Engine: Target \ Student]
+        E1 --> F1[Sub-graph Delta Engine: Target minus Student]
         F1 --> F2[Prerequisite Ancestor Traversal]
         F2 --> F3[Kahn's Topological Sort]
     end
