@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerLattice AI — AI Skill-to-Career Readiness Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #070B14;
+      --bg-secondary: #0D1424;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.3);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --cyan: #06B6D4;
+      --cyan-glow: rgba(6, 182, 212, 0.25);
+      --emerald: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber: #F59E0B;
+      --amber-glow: rgba(245, 158, 11, 0.25);
+      --purple: #8B5CF6;
+      --indigo: #6366F1;
+      --slate-node: #1E293B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(7, 11, 20, 0.85);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #FFFFFF, #93C5FD);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sih-badge {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--cyan);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mode-switch {
+      display: flex;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .mode-btn {
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background: var(--indigo);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .target-role-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #C4B5FD;
+    }
+
+    /* MAIN CONTAINER */
+    .app-container {
+      display: grid;
+      grid-template-columns: 340px 1fr 380px;
+      height: calc(100vh - 73px);
+      overflow: hidden;
+    }
+
+    /* LEFT SIDEBAR: PROFILE & AST INSPECTOR */
+    .sidebar-left {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .candidate-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .candidate-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3B82F6, #10B981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .candidate-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .candidate-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .repo-pill {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #93C5FD;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .polygraph-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .polygraph-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .polygraph-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .status-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .tag-verified {
+      background: var(--emerald-glow);
+      color: #34D399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .tag-partial {
+      background: var(--amber-glow);
+      color: #FBBF24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .tag-unverified {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .meter-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fill-emerald { background: var(--emerald); box-shadow: 0 0 8px var(--emerald-glow); }
+    .fill-amber { background: var(--amber); box-shadow: 0 0 8px var(--amber-glow); }
+    .fill-red { background: #EF4444; }
+
+    .poly-evidence {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-simulate-push {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-simulate-push:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    /* CENTER: ROADMAP CANVAS */
+    .canvas-center {
+      position: relative;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.5) 0%, rgba(7, 11, 20, 0.95) 100%);
+      overflow: auto;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .canvas-toolbar {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .legend-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot-green { background: var(--emerald); box-shadow: 0 0 6px var(--emerald); }
+    .dot-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+    .dot-grey { background: #64748B; }
+
+    /* GRAPH STAGE */
+    .graph-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      margin-top: 50px;
+      max-width: 720px;
+      width: 100%;
+      position: relative;
+    }
+
+    .graph-level {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .level-label {
+      position: absolute;
+      left: -20px;
+      top: -18px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748B;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .node-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 18px;
+      width: 280px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      backdrop-filter: blur(12px);
+    }
+
+    .node-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .node-cleared {
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+      background: rgba(6, 78, 59, 0.25);
+    }
+
+    .node-active {
+      border-color: rgba(245, 158, 11, 0.6);
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.2);
+      background: rgba(120, 53, 15, 0.25);
+      animation: pulse-amber 2.5s infinite;
+    }
+
+    @keyframes pulse-amber {
+      0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); }
+    }
+
+    .node-locked {
+      opacity: 0.6;
+      border-color: rgba(255, 255, 255, 0.05);
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .node-tier {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #94A3B8;
+    }
+
+    .node-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .node-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .node-badge {
+      align-self: flex-start;
+      margin-top: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* RIGHT DRAWER: CAPSTONE & RESOURCES */
+    .sidebar-right {
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .resource-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resource-source {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #38BDF8;
+      text-transform: uppercase;
+    }
+
+    .resource-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .resource-link {
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+
+    .capstone-box {
+      background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.05));
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .capstone-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #E0E7FF;
+      line-height: 1.35;
+    }
+
+    .milestone-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .milestone-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #CBD5E1;
+    }
+
+    .m-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* JOB OPPORTUNITIES SECTION */
+    .job-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .job-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .job-role {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .job-company {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .job-match-badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .match-high {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .match-mid {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-apply {
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-apply:hover {
+      background: var(--cyan);
+      color: #070B14;
+      border-color: var(--cyan);
+    }
+
+    /* TPO VIEW (HIDDEN BY DEFAULT) */
+    .tpo-view {
+      display: none;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .heatmap-table th, .heatmap-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.85rem;
+    }
+
+    .heatmap-table th {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #10B981;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      transform: translateY(120px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🌐</div>
+      <div>
+        <div class="brand-title">CareerLattice AI</div>
+        <div style="font-size: 0.7rem; color: #94A3B8;">Dynamic Skill-to-Career Readiness Platform</div>
+      </div>
+      <span class="sih-badge">SIH SE-02</span>
+    </div>
+
+    <div class="header-controls">
+      <div class="target-role-pill">
+        <span>🎯 Target:</span>
+        <strong id="roleTitle">Robotics & Simulation Engineer</strong>
+      </div>
+
+      <div class="mode-switch">
+        <button class="mode-btn active" id="btnStudentMode" onclick="switchMode('student')">👨‍🎓 Student Mode</button>
+        <button class="mode-btn" id="btnTpoMode" onclick="switchMode('tpo')">🏫 Institutional TPO Mode</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- STUDENT DASHBOARD -->
+  <div class="app-container" id="studentView">
+    
+    <!-- LEFT PANEL: CANDIDATE & AST INSPECTOR -->
+    <aside class="sidebar-left">
+      <div class="section-title">👤 Candidate Profile</div>
+      <div class="candidate-card">
+        <div class="candidate-avatar">RS</div>
+        <div>
+          <div class="candidate-name">Rohan Sharma</div>
+          <div class="candidate-sub">B.Sc / B.Tech Physics • 3rd Year</div>
+          <div class="repo-pill">
+            <span>🐙</span> github.com/rohan-physics-dev
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <span>🌲 Code-Grounding Polygraph</span>
+      </div>
+      <div class="polygraph-box">
+        <div style="font-size: 0.74rem; color: #94A3B8; margin-bottom: 4px;">
+          Tree-sitter AST & Manifest Inspection:
+        </div>
+
+        <!-- 1. Mechanics -->
+        <div class="polygraph-item">
+          <div class="polygraph-header">
+            <span>Classical Mechanics</span>
+            <span class="status-tag tag-verified" id="tag-mech">VERIFIED (96%)</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill fill-emerald" id="meter-mech" style="width: 96%;"></div>
+          </div>
+          <div class="poly-evidence">NumPy Runge-Kutta ODE solvers found</div>
+        </div>
+
+        <!-- 2. Linear Algebra -->
+        <div class="polygraph-item">
+          <div class="polygraph-header">
+            <span>Linear Algebra & Vectors</span>
+            <span class="status-tag tag-verified" id="tag-la">VERIFIED (92%)</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill fill-emerald" id="meter-la" style="width: 92%;"></div>
+          </div>
+          <div class="poly-evidence">Rotation matrix transformations detected</div>
+        </div>
+
+        <!-- 3. URDF Simulation -->
+        <div class="polygraph-item">
+          <div class="polygraph-header">
+            <span>URDF Robot Modeling</span>
+            <span class="status-tag tag-partial" id="tag-urdf">PARTIAL (45%)</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill fill-amber" id="meter-urdf" style="width: 45%;"></div>
+          </div>
+          <div class="poly-evidence" id="evidence-urdf">Basic mesh geometry; missing joint physics</div>
+        </div>
+
+        <!-- 4. ROS 2 -->
+        <div class="polygraph-item">
+          <div class="polygraph-header">
+            <span>ROS 2 Middleware</span>
+            <span class="status-tag tag-unverified" id="tag-ros">NOT VERIFIED (15%)</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill fill-red" id="meter-ros" style="width: 15%;"></div>
+          </div>
+          <div class="poly-evidence" id="evidence-ros">0 rclpy imports or package.xml found</div>
+        </div>
+      </div>
+
+      <!-- SIMULATION TRIGGER BUTTON -->
+      <button class="action-btn btn-simulate-push" id="btnPush" onclick="simulateGitPush()">
+        <span>🚀</span> Simulate Git Push (Commit Capstone)
+      </button>
+      <div style="font-size: 0.72rem; color: #64748B; text-align: center;">
+        Demonstrates webhook auto-verification on student GitHub commit.
+      </div>
+    </aside>
+
+    <!-- CENTER CANVAS: INTERACTIVE TOPOLOGICAL DAG -->
+    <main class="canvas-center">
+      <div class="canvas-toolbar">
+        <div class="legend-chip"><span class="dot dot-green"></span> Demonstrated (Cleared)</div>
+        <div class="legend-chip"><span class="dot dot-amber"></span> Active Prerequisite Gap</div>
+        <div class="legend-chip"><span class="dot dot-grey"></span> Locked Target Node</div>
+      </div>
+
+      <div class="graph-stage">
+        
+        <!-- LEVEL 1: FOUNDATION -->
+        <div class="graph-level">
+          <div class="level-label">Level 1: Core Physics & Math Foundations</div>
+          
+          <div class="node-card node-cleared" onclick="selectNode('mechanics')">
+            <div class="node-header">
+              <span class="node-tier">Foundational Physics</span>
+              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
+            </div>
+            <div class="node-title">Classical Mechanics & Kinematics</div>
+            <div class="node-sub">Degrees of freedom, torque, inertia, velocity ODEs.</div>
+          </div>
+
+          <div class="node-card node-cleared" onclick="selectNode('linalg')">
+            <div class="node-header">
+              <span class="node-tier">Foundational Math</span>
+              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
+            </div>
+            <div class="node-title">Linear Algebra & Transforms</div>
+            <div class="node-sub">Eigenvalues, quaternions, SO(3) rotation matrices.</div>
+          </div>
+        </div>
+
+        <!-- LEVEL 2: COMPUTATIONAL BRIDGE -->
+        <div class="graph-level">
+          <div class="level-label">Level 2: Computational Simulation Bridge</div>
+
+          <div class="node-card node-cleared" onclick="selectNode('scipy')">
+            <div class="node-header">
+              <span class="node-tier">Computation</span>
+              <span class="node-badge" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Mastered</span>
+            </div>
+            <div class="node-title">Scientific Python (NumPy/SciPy)</div>
+            <div class="node-sub">Trajectory simulation & numerical integration.</div>
+          </div>
+
+          <div class="node-card node-active" id="nodeUrdf" onclick="selectNode('urdf')">
+            <div class="node-header">
+              <span class="node-tier">Active Prerequisite</span>
+              <span class="node-badge" id="badgeUrdf" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24;">🟡 Learn Next</span>
+            </div>
+            <div class="node-title">URDF Modeling & PyBullet Physics</div>
+            <div class="node-sub">Rigid body definitions, collision bounds & joint limits.</div>
+          </div>
+        </div>
+
+        <!-- LEVEL 3: CAPSTONE TARGET -->
+        <div class="graph-level">
+          <div class="level-label">Level 3: Industrial Robotics Middleware</div>
+
+          <div class="node-card node-locked" id="nodeRos" onclick="selectNode('ros')">
+            <div class="node-header">
+              <span class="node-tier">Industry Target</span>
+              <span class="node-badge" id="badgeRos" style="background: rgba(100, 116, 139, 0.2); color: #94A3B8;">⚪ Locked Goal</span>
+            </div>
+            <div class="node-title">ROS 2 Navigation & Sensor Fusion</div>
+            <div class="node-sub">LiDAR ray-casting, Extended Kalman Filter & /cmd_vel.</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL: CAPSTONE BLUEPRINT & JOB OPPORTUNITIES -->
+    <aside class="sidebar-right">
+      <div class="section-title">🛠️ Prescribed Industrial Capstone</div>
+      
+      <div class="capstone-box">
+        <div style="font-size: 0.72rem; color: #A5B4FC; font-weight: 700; text-transform: uppercase;">
+          Proof-of-Competence Project
+        </div>
+        <div class="capstone-title">
+          Autonomous Mobile Robot (AMR): Kinematic Physics Simulator in ROS 2
+        </div>
+        
+        <ul class="milestone-list">
+          <li class="milestone-item">
+            <span class="m-num">1</span>
+            <span>Differential-drive kinematics equations with Runge-Kutta numerical integration.</span>
+          </li>
+          <li class="milestone-item">
+            <span class="m-num">2</span>
+            <span>URDF robot file with rigid masses, wheel friction & PyBullet simulation sandbox.</span>
+          </li>
+          <li class="milestone-item">
+            <span class="m-num">3</span>
+            <span>LiDAR sensor simulation + Extended Kalman Filter (EKF) state estimation.</span>
+          </li>
+          <li class="milestone-item">
+            <span class="m-num">4</span>
+            <span>ROS 2 nodes publishing velocity commands with obstacle avoidance.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-title">🎓 Verified Learning Resource</div>
+      <div class="resource-card" id="resourceCard">
+        <div class="resource-source">🇮🇳 NPTEL / IIT Madras • Module 4</div>
+        <div class="resource-title">Robotics & Control Systems: Rigid Body Dynamics & Robot Kinematics</div>
+        <div style="font-size: 0.75rem; color: #94A3B8;">Prof. B. Ravindran & Prof. T. Asokan • Timestamp: 14:20 to 32:45</div>
+        <a href="https://nptel.ac.in" target="_blank" class="resource-link">
+          Open Verified Lecture Module ➔
+        </a>
+      </div>
+
+      <div class="section-title">
+        <span>💼 Matched Jobs (Open-Source JobSpy)</span>
+      </div>
+
+      <!-- Job 1 -->
+      <div class="job-card">
+        <div class="job-header">
+          <div>
+            <div class="job-role">Robotics Simulation Intern</div>
+            <div class="job-company">Ather Energy • Bangalore</div>
+          </div>
+          <span class="job-match-badge match-mid" id="atherBadge">80% Match</span>
+        </div>
+        <div style="font-size: 0.74rem; color: #94A3B8;" id="atherStatus">
+          4 of 5 Core Skills Verified • Missing: ROS 2 Middleware
+        </div>
+        <a href="#" class="btn-apply" onclick="alert('Redirecting to Ather Energy original careers portal...')">
+          View on Original Portal
+        </a>
+      </div>
+
+      <!-- Job 2 -->
+      <div class="job-card">
+        <div class="job-header">
+          <div>
+            <div class="job-role">AMR Dynamics Engineer</div>
+            <div class="job-company">GreyOrange Robotics • Gurgaon</div>
+          </div>
+          <span class="job-match-badge match-mid" id="greyBadge">75% Match</span>
+        </div>
+        <div style="font-size: 0.74rem; color: #94A3B8;" id="greyStatus">
+          Core Mechanics verified • Missing: URDF Sandbox
+        </div>
+        <a href="#" class="btn-apply" onclick="alert('Redirecting to GreyOrange original careers portal...')">
+          View on Original Portal
+        </a>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- INSTITUTIONAL TPO VIEW -->
+  <div class="tpo-view" id="tpoView">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 800;">🏫 Institutional Curriculum vs. Industry Discrepancy Heatmap</h2>
+        <p style="color: #94A3B8; font-size: 0.85rem; margin-top: 4px;">
+          Audited University B.Tech / M.Sc. Syllabus against 12,000 Live Job Market Postings
+        </p>
+      </div>
+      <button class="action-btn" style="width: auto; background: var(--indigo); color: white; padding: 10px 18px;" onclick="alert('Upload new curriculum PDF dialog')">
+        📄 Upload Department Syllabus (PDF)
+      </button>
+    </div>
+
+    <table class="heatmap-table">
+      <thead>
+        <tr>
+          <th>Technical Domain</th>
+          <th>Live Industry Demand</th>
+          <th>Institutional Syllabus Hours</th>
+          <th>Gap Status</th>
+          <th>Recommended TPO Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Classical Mechanics & Kinematics</strong></td>
+          <td><span style="color: #34D399; font-weight: 700;">85% High</span></td>
+          <td>120 Hours (Semester 1 & 2)</td>
+          <td><span class="status-pill" style="background: rgba(16, 185, 129, 0.2); color: #34D399;">🟢 Balanced</span></td>
+          <td>Maintain current course depth</td>
+        </tr>
+        <tr>
+          <td><strong>URDF & Physics Simulation (PyBullet/Gazebo)</strong></td>
+          <td><span style="color: #F87171; font-weight: 700;">74% High</span></td>
+          <td>0 Hours (Absent)</td>
+          <td><span class="status-pill" style="background: rgba(239, 68, 68, 0.2); color: #F87171;">🔴 Critical Gap</span></td>
+          <td>Host 2-weekend lab simulation workshop</td>
+        </tr>
+        <tr>
+          <td><strong>Robot Operating System (ROS 2)</strong></td>
+          <td><span style="color: #F87171; font-weight: 700;">82% Very High</span></td>
+          <td>0 Hours (Absent)</td>
+          <td><span class="status-pill" style="background: rgba(239, 68, 68, 0.2); color: #F87171;">🔴 Critical Gap</span></td>
+          <td>Partner with NASSCOM FutureSkills Prime</td>
+        </tr>
+        <tr>
+          <td><strong>Legacy 8085 Microprocessor Assembly</strong></td>
+          <td><span style="color: #94A3B8; font-weight: 700;">&lt; 2% Negligible</span></td>
+          <td>80 Laboratory Hours</td>
+          <td><span class="status-pill" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24;">🟡 Obsolete Overhead</span></td>
+          <td>Replace with Embedded Linux / ARM Cortex</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <span style="font-size: 20px;">✅</span>
+    <div>
+      <strong style="color: #34D399;">GitHub Commit Detected!</strong>
+      <div style="font-size: 0.75rem; color: #94A3B8;" id="toastMsg">Tree-sitter verified 'robot.urdf' & ROS 2 nodes.</div>
+    </div>
+  </div>
+
+  <script>
+    function switchMode(mode) {
+      const studentView = document.getElementById('studentView');
+      const tpoView = document.getElementById('tpoView');
+      const btnStudent = document.getElementById('btnStudentMode');
+      const btnTpo = document.getElementById('btnTpoMode');
+
+      if (mode === 'student') {
+        studentView.style.display = 'grid';
+        tpoView.style.display = 'none';
+        btnStudent.classList.add('active');
+        btnTpo.classList.remove('active');
+      } else {
+        studentView.style.display = 'none';
+        tpoView.style.display = 'block';
+        btnTpo.classList.add('active');
+        btnStudent.classList.remove('active');
+      }
+    }
+
+    function selectNode(nodeKey) {
+      const resourceCard = document.getElementById('resourceCard');
+      if (nodeKey === 'urdf') {
+        resourceCard.innerHTML = `
+          <div class="resource-source">🇮🇳 NPTEL / IIT Madras • Module 4</div>
+          <div class="resource-title">Robotics & Control Systems: Rigid Body Dynamics & Robot Kinematics</div>
+          <div style="font-size: 0.75rem; color: #94A3B8;">Prof. B. Ravindran & Prof. T. Asokan • Timestamp: 14:20 to 32:45</div>
+          <a href="https://nptel.ac.in" target="_blank" class="resource-link">Open Verified Lecture Module ➔</a>
+        `;
+      } else if (nodeKey === 'ros') {
+        resourceCard.innerHTML = `
+          <div class="resource-source">📚 Official Documentation & Course</div>
+          <div class="resource-title">ROS 2 Navigation & Sensor Fusion (Humble/Iron)</div>
+          <div style="font-size: 0.75rem; color: #94A3B8;">Publisher-Subscriber Architecture, /scan & /cmd_vel nodes</div>
+          <a href="https://docs.ros.org" target="_blank" class="resource-link">Open Official Documentation ➔</a>
+        `;
+      } else {
+        resourceCard.innerHTML = `
+          <div class="resource-source">🎓 Verified Academic Reference</div>
+          <div class="resource-title">Advanced Dynamics & Mathematical Physics for Robotics</div>
+          <div style="font-size: 0.75rem; color: #94A3B8;">MIT OpenCourseWare (Classical Mechanics 8.01)</div>
+          <a href="https://ocw.mit.edu" target="_blank" class="resource-link">Open Course Materials ➔</a>
+        `;
+      }
+    }
+
+    let isPushed = false;
+    function simulateGitPush() {
+      if (isPushed) return;
+      isPushed = true;
+
+      // 1. Show Toast
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+
+      // 2. Update Code Polygraph Meters
+      document.getElementById('meter-urdf').style.width = '94%';
+      document.getElementById('meter-urdf').className = 'meter-fill fill-emerald';
+      document.getElementById('tag-urdf').className = 'status-tag tag-verified';
+      document.getElementById('tag-urdf').innerText = 'VERIFIED (94%)';
+      document.getElementById('evidence-urdf').innerText = 'robot.urdf loaded in PyBullet with joints';
+
+      document.getElementById('meter-ros').style.width = '88%';
+      document.getElementById('meter-ros').className = 'meter-fill fill-emerald';
+      document.getElementById('tag-ros').className = 'status-tag tag-verified';
+      document.getElementById('tag-ros').innerText = 'VERIFIED (88%)';
+      document.getElementById('evidence-ros').innerText = 'rclpy publisher & LiDAR subscribers active';
+
+      // 3. Update Graph Nodes
+      const nodeUrdf = document.getElementById('nodeUrdf');
+      nodeUrdf.className = 'node-card node-cleared';
+      document.getElementById('badgeUrdf').style.background = 'rgba(16, 185, 129, 0.2)';
+      document.getElementById('badgeUrdf').style.color = '#34D399';
+      document.getElementById('badgeUrdf').innerText = '🟢 Cleared via Capstone';
+
+      const nodeRos = document.getElementById('nodeRos');
+      nodeRos.className = 'node-card node-cleared';
+      document.getElementById('badgeRos').style.background = 'rgba(16, 185, 129, 0.2)';
+      document.getElementById('badgeRos').style.color = '#34D399';
+      document.getElementById('badgeRos').innerText = '🟢 Demonstrated';
+
+      // 4. Update Matched Jobs
+      const atherBadge = document.getElementById('atherBadge');
+      atherBadge.className = 'job-match-badge match-high';
+      atherBadge.innerText = '100% Match';
+      document.getElementById('atherStatus').innerHTML = '<span style="color: #34D399; font-weight: 700;">All 5 of 5 Core Skills Verified via AMR Capstone!</span>';
+
+      const greyBadge = document.getElementById('greyBadge');
+      greyBadge.className = 'job-match-badge match-high';
+      greyBadge.innerText = '95% Match';
+      document.getElementById('greyStatus').innerHTML = '<span style="color: #34D399; font-weight: 700;">Physics & Simulation verified! Ready to apply.</span>';
+
+      // 5. Change Button State
+      const btnPush = document.getElementById('btnPush');
+      btnPush.innerText = '✅ Capstone Verified on GitHub';
+      btnPush.style.background = 'rgba(16, 185, 129, 0.2)';
+      btnPush.style.color = '#34D399';
+      btnPush.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+    }
+  </script>
+</body>
+</html>
