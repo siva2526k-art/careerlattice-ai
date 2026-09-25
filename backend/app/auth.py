@@ -50,7 +50,7 @@ def validate_session_token(token: str) -> Optional[Dict[str, Any]]:
         return None
     return get_user_by_id(session["user_id"])
 
-def register_user(email: str, password: str, full_name: str) -> Dict[str, Any]:
+def register_user(email: str, password: str, full_name: str, confirm_password: Optional[str] = None) -> Dict[str, Any]:
     email = email.lower().strip()
     full_name = full_name.strip()
     
@@ -59,6 +59,8 @@ def register_user(email: str, password: str, full_name: str) -> Dict[str, Any]:
         raise ValueError("Invalid email format.")
     if len(password) < 6:
         raise ValueError("Password must be at least 6 characters long.")
+    if confirm_password is not None and password != confirm_password:
+        raise ValueError("Passwords do not match.")
     if len(full_name) < 2:
         raise ValueError("Full name must be at least 2 characters long.")
     
@@ -96,3 +98,10 @@ def login_user(email: str, password: str) -> Dict[str, Any]:
             "created_at": user["created_at"]
         }
     }
+
+def logout_user(token: str) -> bool:
+    if token in ACTIVE_SESSIONS:
+        del ACTIVE_SESSIONS[token]
+        log_event("AUTH", f"Session token {token[:8]}... invalidated successfully.")
+        return True
+    return False

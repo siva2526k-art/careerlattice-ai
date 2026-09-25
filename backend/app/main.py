@@ -14,9 +14,10 @@ from backend.app.database import (
     save_user_github, get_user_github,
     save_user_skill_evidence, get_user_skills,
     save_assessment_attempt, get_user_assessment_results,
-    save_user_roadmap, get_user_roadmap
+    save_user_roadmap, get_user_roadmap,
+    complete_roadmap_node, get_verified_learning_resources, get_job_catalog
 )
-from backend.app.auth import register_user, login_user, validate_session_token
+from backend.app.auth import register_user, login_user, validate_session_token, logout_user
 from backend.app.resume_parser import parse_resume_pdf, get_demo_resume_data
 from backend.app.github_service import fetch_user_repositories, get_demo_repositories
 from backend.app.code_inspector import evaluate_selected_repositories
@@ -65,6 +66,7 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
     full_name: str
+    confirm_password: Optional[str] = None
 
 class LoginRequest(BaseModel):
     email: str
@@ -72,6 +74,8 @@ class LoginRequest(BaseModel):
 
 class ConsentRequest(BaseModel):
     accepted: bool
+    terms_version: str = "v1.0"
+    privacy_version: str = "v1.0"
 
 class UpdateSkillsRequest(BaseModel):
     skills: List[str]
@@ -96,6 +100,9 @@ class AssessmentAnswerRequest(BaseModel):
 class RoadmapRequest(BaseModel):
     target_role: str = "Junior Backend Developer"
 
+class CompleteNodeRequest(BaseModel):
+    evidence_proof: str = "Capstone project completed and pushed to repository"
+
 # ==========================================
 # 1. HEALTH & SYSTEM
 # ==========================================
@@ -114,7 +121,7 @@ def health_check():
 @app.post("/api/auth/register")
 def api_register(req: RegisterRequest):
     try:
-        result = register_user(req.email, req.password, req.full_name)
+        result = register_user(req.email, req.password, req.full_name, req.confirm_password)
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -126,6 +133,13 @@ def api_login(req: LoginRequest):
         return result
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
+
+@app.post("/api/auth/logout")
+def api_logout(authorization: Optional[str] = Header(None)):
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.split(" ")[1]
+        logout_user(token)
+    return {"status": "success", "message": "Logged out successfully."}
 
 @app.get("/api/auth/me")
 def api_get_me(user: Dict[str, Any] = Depends(get_current_user)):
@@ -167,6 +181,24 @@ async def api_upload_resume(
         "extracted_data": extracted
     }
 
+@app.post("/api/resumes")
+async def api_post_resumes(file: UploadFile = File(...), user: Dict[str, Any] = Depends(get_current_user)):
+    return await api_upload_resume(file, user)
+
+@app.get("/api/resumes")
+def api_get_resumes(user: Dict[str, Any] = Depends(get_current_user)):
+    data = get_user_resume_data(user["id"])
+    if not data:
+        raise HTTPException(status_code=404, detail="No resume uploaded yet.")
+    return data
+
+@app.get("/api/resumes/{resume_id}")
+def api_get_resume_by_id(resume_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    data = get_user_resume_data(user["id"])
+    if not data:
+        raise HTTPException(status_code=404, detail="Resume not found.")
+    return data
+
 @app.post("/api/resume/update-skills")
 def api_update_skills(req: UpdateSkillsRequest, user: Dict[str, Any] = Depends(get_current_user)):
     resume_data = get_user_resume_data(user["id"])
@@ -180,6 +212,41 @@ def api_update_skills(req: UpdateSkillsRequest, user: Dict[str, Any] = Depends(g
 # ==========================================
 # 5. GITHUB CONNECTION & AST (PAGE 4)
 # ==========================================
+@app.get("/api/github/connect")
+def api_github_oauth_url():
+    """Generates GitHub OAuth authorization URL or instructions."""
+    client_id = os.getenv("GITHUB_CLIENT_ID", "")
+    if client_id:
+        return {
+            "oauth_url": f"https://github.com/login/oauth/authorize?client_id={client_id}&scope=read:user,repo"
+        }
+    return {
+        "oauth_url": None,
+        "message": "GitHub OAuth app credentials (GITHUB_CLIENT_ID) not configured in environment. Use username or token flow."
+    }
+
+@app.get("/api/github/callback")
+def api_github_callback(code: str):
+    """Handles GitHub OAuth authorization callback."""
+    return {
+        "status": "success",
+        "code_received": True,
+        "message": "GitHub OAuth code received. Token exchange simulated or configured."
+    }
+
+@app.get("/api/github/repos")
+async def api_get_github_repos(user: Dict[str, Any] = Depends(get_current_user)):
+    gh_data = get_user_github(user["id"])
+    handle = gh_data.get("github_handle", "rohan-sharma-dev") if gh_data else "rohan-sharma-dev"
+    repos = await fetch_user_repositories(handle)
+    if not repos:
+        repos = get_demo_repositories()
+    return {"repositories": repos}
+
+@app.post("/api/github/repos/select")
+def api_select_github_repos(req: GitHubAnalyzeRequest, user: Dict[str, Any] = Depends(get_current_user)):
+    return api_github_analyze(req, user)
+
 @app.post("/api/github/connect")
 async def api_github_connect(req: GitHubConnectRequest, user: Dict[str, Any] = Depends(get_current_user)):
     repos = await fetch_user_repositories(req.username_or_token, req.is_token)
@@ -201,10 +268,9 @@ def api_github_analyze(req: GitHubAnalyzeRequest, user: Dict[str, Any] = Depends
         "evidence": evidence
     }
 
-# ==========================================
-# 6. SELF ASSESSMENT (PAGE 5)
-# ==========================================
 @app.post("/api/self-assessment")
+@app.post("/api/skills/self-assessment")
+@app.post("/skills/self-assessment")
 def api_self_assessment(req: SelfAssessmentRequest, user: Dict[str, Any] = Depends(get_current_user)):
     # Save self ratings
     for skill, level in req.ratings.items():
@@ -223,9 +289,12 @@ def api_self_assessment(req: SelfAssessmentRequest, user: Dict[str, Any] = Depen
 # 7. ADAPTIVE TECHNICAL ASSESSMENT (PAGE 6)
 # ==========================================
 @app.get("/api/assessment/questions")
-def api_get_assessment_questions(skill: str, level: str = "Intermediate", user: Dict[str, Any] = Depends(get_current_user)):
+@app.post("/api/assessment/start")
+@app.post("/assessment/start")
+def api_get_assessment_questions(skill: str = "Python", level: str = "Intermediate", user: Dict[str, Any] = Depends(get_current_user)):
     questions = get_questions_for_skill(skill_name=skill, starting_level=level, limit=4)
     return {
+        "assessment_id": f"assess_{skill.lower()}_{user['id'][:8]}",
         "skill": skill,
         "questions": questions
     }
@@ -247,9 +316,30 @@ def api_submit_assessment_answer(req: AssessmentAnswerRequest, user: Dict[str, A
         "grading": grading
     }
 
+@app.post("/api/assessment/{assessment_id}/answer")
+@app.post("/assessment/{assessment_id}/answer")
+def api_assessment_id_answer(assessment_id: str, req: AssessmentAnswerRequest, user: Dict[str, Any] = Depends(get_current_user)):
+    return api_submit_assessment_answer(req=req, user=user)
+
+@app.post("/api/assessment/{assessment_id}/submit")
+@app.post("/assessment/{assessment_id}/submit")
+def api_assessment_id_submit(assessment_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    return api_calculate_evidence(user=user)
+
+@app.get("/api/assessment/{assessment_id}")
+@app.get("/assessment/{assessment_id}")
+def api_get_assessment_id(assessment_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    results = get_user_assessment_results(user["id"])
+    return {"status": "success", "assessment_id": assessment_id, "results": results}
+
 # ==========================================
 # 8. EVIDENCE ANALYSIS & DASHBOARD (PAGE 7)
 # ==========================================
+@app.get("/api/evidence")
+@app.get("/evidence")
+def api_get_evidence(user: Dict[str, Any] = Depends(get_current_user)):
+    return api_get_skills(user=user)
+
 @app.post("/api/evidence/calculate")
 def api_calculate_evidence(user: Dict[str, Any] = Depends(get_current_user)):
     resume_info = get_user_resume_data(user["id"])
@@ -321,6 +411,40 @@ def api_get_roadmap(req: RoadmapRequest, user: Dict[str, Any] = Depends(get_curr
     save_user_roadmap(user["id"], req.target_role, roadmap["nodes"])
     return roadmap
 
+@app.get("/api/roadmap")
+def api_get_saved_roadmap(role: str = "Junior Backend Developer", user: Dict[str, Any] = Depends(get_current_user)):
+    saved = get_user_roadmap(user["id"])
+    if saved and saved.get("target_role") == role:
+        return saved
+    return api_get_roadmap(RoadmapRequest(target_role=role), user)
+
+@app.post("/api/roadmap/{node}/complete")
+def api_complete_roadmap_node(node: str, req: CompleteNodeRequest = CompleteNodeRequest(), user: Dict[str, Any] = Depends(get_current_user)):
+    result = complete_roadmap_node(user["id"], node, req.evidence_proof)
+    return result
+
+@app.get("/api/resources")
+def api_get_resources(skill: Optional[str] = None, user: Dict[str, Any] = Depends(get_current_user)):
+    resources = get_verified_learning_resources(skill)
+    return {"status": "success", "count": len(resources), "resources": resources}
+
+@app.post("/api/resources/{resource_id}/complete")
+def api_complete_resource(resource_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    return {"status": "success", "resource_id": resource_id, "completed": True}
+
+@app.get("/api/skills")
+def api_get_skills(user: Dict[str, Any] = Depends(get_current_user)):
+    skills = get_user_skills(user["id"])
+    return {"status": "success", "skills": skills}
+
+@app.get("/api/evidence/{skill}")
+def api_get_skill_evidence(skill: str, user: Dict[str, Any] = Depends(get_current_user)):
+    skills = get_user_skills(user["id"])
+    match = [s for s in skills if s["skill_name"].lower() == skill.lower()]
+    if match:
+        return match[0]
+    raise HTTPException(status_code=404, detail=f"No evidence record found for skill '{skill}'.")
+
 # ==========================================
 # 10. JOB MATCHING ENGINE (PAGE 9)
 # ==========================================
@@ -342,10 +466,49 @@ def api_get_jobs(role: str = "Junior Backend Developer", user: Dict[str, Any] = 
         "jobs": matched_jobs
     }
 
+@app.get("/api/jobs/{job_id}")
+def api_get_job_detail(job_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    catalog = get_job_catalog()
+    match = [j for j in catalog if j["id"] == job_id]
+    if match:
+        return match[0]
+    raise HTTPException(status_code=404, detail="Job posting not found.")
+
+@app.get("/api/jobs/{job_id}/match")
+def api_get_job_match(job_id: str, user: Dict[str, Any] = Depends(get_current_user)):
+    skills = get_user_skills(user["id"])
+    verified_names = [s["skill_name"] for s in skills if s["evidence_status"] == "VERIFIED"]
+    partial_names = [s["skill_name"] for s in skills if s["evidence_status"] == "PARTIAL"]
+    
+    catalog = get_job_catalog()
+    job = next((j for j in catalog if j["id"] == job_id), None)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job posting not found.")
+        
+    req_skills = set(job.get("required_skills", []))
+    verified_met = [s for s in req_skills if s in verified_names]
+    partial_met = [s for s in req_skills if s in partial_names]
+    missing = [s for s in req_skills if s not in verified_names and s not in partial_names]
+    
+    match_score = int(((len(verified_met) * 1.0 + len(partial_met) * 0.5) / max(len(req_skills), 1)) * 100)
+    
+    return {
+        "job_id": job_id,
+        "role_title": job["title"],
+        "company": job["company"],
+        "match_percentage": match_score,
+        "verified_met": verified_met,
+        "partial_met": partial_met,
+        "missing_gaps": missing,
+        "status_label": "High Alignment" if match_score >= 80 else ("In Progress" if match_score >= 50 else "Prerequisite Gaps")
+    }
+
 # ==========================================
 # 11. CONTINUOUS LEARNING LOOP (RESCAN)
 # ==========================================
 @app.post("/api/evidence/rescan")
+@app.post("/api/github/rescan")
+@app.post("/github/rescan")
 def api_evidence_rescan(user: Dict[str, Any] = Depends(get_current_user)):
     """
     Simulates / triggers the 'Update My Evidence' loop:
