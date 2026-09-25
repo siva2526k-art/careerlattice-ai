@@ -117,6 +117,7 @@ All technical specifications, pitch decks, and implementation guides are organiz
 | 📄 **[`docs/04_SMALLEST_WINNING_MVP.md`](docs/04_SMALLEST_WINNING_MVP.md)** | Minimal viable prototype execution guide, 30-node demo graph, and sample payload schemas. |
 | 📄 **[`docs/05_PHYSICS_ROBOTICS_CAPSTONE_SPEC.md`](docs/05_PHYSICS_ROBOTICS_CAPSTONE_SPEC.md)** | Detailed specification for the Physics-to-Robotics capstone project (*Autonomous Mobile Robot Simulator*) and AST verification rules. |
 | 📄 **[`docs/06_SIH_PRESENTATION_DECK_12_SLIDES.md`](docs/06_SIH_PRESENTATION_DECK_12_SLIDES.md)** | Master 12-slide pitch deck narrative + copy-paste prompt for Gamma (gamma.app). |
+| 📄 **[`docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md`](docs/07_CLOUD_DEPLOYMENT_AND_AI_ASSESSMENT_SPEC.md)** | Render web service deployment, Supabase cloud database schema & Gemini AI adaptive evaluation engine. |
 
 ---
 
