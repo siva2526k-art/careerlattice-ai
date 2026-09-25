@@ -257,3 +257,38 @@ def test_endpoint_aliases_and_subresources():
     assert match_res.status_code == 200
     assert "match_percentage" in match_res.json()
 
+def test_github_repo_url_parsing_and_sivabalan():
+    email = f"siva_{secrets.token_hex(4)}@test.com"
+    reg_res = client.post("/api/auth/register", json={
+        "email": email,
+        "password": "Password123",
+        "full_name": "Sivabalan T"
+    })
+    token = reg_res.json()["token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Test connecting with full repository URL as pasted by user
+    gh_url = "https://github.com/siva2526k-art/hackatronix2.0"
+    gh_res = client.post("/api/github/connect", json={"username_or_token": gh_url}, headers=headers)
+    assert gh_res.status_code == 200
+    data = gh_res.json()
+    assert data["github_handle"] == "siva2526k-art"
+    assert data["target_repo"] == "hackatronix2.0"
+    repo_names = [r["name"] for r in data["repositories"]]
+    assert "hackatronix2.0" in repo_names
+    assert "SENTINEL" in repo_names
+
+    # Test AST analysis with Sivabalan repos
+    analyze_res = client.post("/api/github/analyze", json={
+        "github_handle": "siva2526k-art",
+        "selected_repos": ["hackatronix2.0", "SENTINEL", "careerlattice-ai"],
+        "claimed_skills": ["Python", "FastAPI", "React", "Docker", "ChromaDB", "Zero-Trust", "Wazuh"]
+    }, headers=headers)
+    assert analyze_res.status_code == 200
+    evidence = analyze_res.json()["evidence"]["skills_evidence"]
+    assert evidence["Python"]["status"] == "VERIFIED"
+    assert evidence["FastAPI"]["status"] == "VERIFIED"
+    assert evidence["ChromaDB"]["status"] == "VERIFIED"
+    assert evidence["Zero-Trust"]["status"] == "VERIFIED"
+
+

@@ -18,8 +18,8 @@ from backend.app.database import (
     complete_roadmap_node, get_verified_learning_resources, get_job_catalog
 )
 from backend.app.auth import register_user, login_user, validate_session_token, logout_user
-from backend.app.resume_parser import parse_resume_pdf, get_demo_resume_data
-from backend.app.github_service import fetch_user_repositories, get_demo_repositories
+from backend.app.resume_parser import parse_resume_pdf, get_demo_resume_data, get_sivabalan_resume_data
+from backend.app.github_service import fetch_user_repositories, get_demo_repositories, get_sivabalan_repositories, parse_github_identifier
 from backend.app.code_inspector import evaluate_selected_repositories
 from backend.app.assessment_engine import get_questions_for_skill, grade_assessment_submission, generate_gemini_dynamic_question
 from backend.app.evidence_engine import aggregate_candidate_evidence_matrix
@@ -91,9 +91,10 @@ class RepoSelectRequest(BaseModel):
     claimed_skills: Optional[List[str]] = None
 
 class GitHubAnalyzeRequest(BaseModel):
-    github_handle: str = "rohan-sharma-dev"
-    selected_repos: List[str] = []
-    claimed_skills: List[str] = []
+    github_handle: Optional[str] = "siva2526k-art"
+    selected_repos: Optional[List[str]] = []
+    repo_names: Optional[List[str]] = None
+    claimed_skills: Optional[List[str]] = None
 
 class SelfAssessmentRequest(BaseModel):
     ratings: Dict[str, str] # skill_name -> Beginner / Developing / Intermediate / Advanced
@@ -277,36 +278,61 @@ def api_github_callback(code: str):
     }
 
 @app.get("/api/github/repos")
-async def api_get_github_repos(user: Dict[str, Any] = Depends(get_current_user)):
+async def api_get_github_repos(
+    handle: Optional[str] = None,
+    user: Dict[str, Any] = Depends(get_current_user)
+):
     gh_data = get_user_github(user["id"])
-    handle = gh_data.get("github_handle", "rohan-sharma-dev") if gh_data else "rohan-sharma-dev"
-    repos = await fetch_user_repositories(handle)
+    target_handle = handle or (gh_data.get("github_handle") if gh_data else None) or "siva2526k-art"
+    username, target_repo = parse_github_identifier(target_handle)
+    repos = await fetch_user_repositories(username)
     if not repos:
-        repos = get_demo_repositories()
-    return {"repositories": repos}
+        if "siva" in username.lower():
+            repos = get_sivabalan_repositories(target_repo)
+        else:
+            repos = get_demo_repositories()
+    return {
+        "status": "success",
+        "github_handle": username,
+        "target_repo": target_repo,
+        "repositories": repos
+    }
 
 @app.post("/api/github/repos/select")
 def api_select_github_repos(req: RepoSelectRequest, user: Dict[str, Any] = Depends(get_current_user)):
     repos = req.repo_names or req.selected_repos or []
-    save_user_github(user["id"], req.github_handle or "rohan-sharma-dev", repos, {})
+    save_user_github(user["id"], req.github_handle or "siva2526k-art", repos, {})
     return {"status": "success", "selected_repos": repos}
 
 @app.post("/api/github/connect")
 async def api_github_connect(req: GitHubConnectRequest, user: Dict[str, Any] = Depends(get_current_user)):
-    repos = await fetch_user_repositories(req.username_or_token, req.is_token)
+    username, target_repo = parse_github_identifier(req.username_or_token) if not req.is_token else (req.username_or_token, None)
+    repos = await fetch_user_repositories(username, req.is_token)
     if not repos:
-        # If user not found, provide demo repository options
-        repos = get_demo_repositories()
+        if "siva" in username.lower():
+            repos = get_sivabalan_repositories(target_repo)
+        else:
+            repos = get_demo_repositories()
+
+    # Pre-select target_repo if provided, or top 3 repos
+    selected = [target_repo] if target_repo else [r["name"] for r in repos[:3]]
+    save_user_github(user["id"], username, selected, {})
     return {
         "status": "success",
-        "github_handle": req.username_or_token,
+        "github_handle": username,
+        "target_repo": target_repo,
         "repositories": repos
     }
 
 @app.post("/api/github/analyze")
 def api_github_analyze(req: GitHubAnalyzeRequest, user: Dict[str, Any] = Depends(get_current_user)):
-    evidence = evaluate_selected_repositories(req.selected_repos, req.claimed_skills)
-    save_user_github(user["id"], req.github_handle, req.selected_repos, evidence)
+    repos = req.selected_repos or req.repo_names or []
+    claimed = req.claimed_skills
+    if not claimed:
+        res_data = get_user_resume_data(user["id"])
+        claimed = res_data.get("extracted_skills", []) if res_data else []
+    evidence = evaluate_selected_repositories(repos, claimed)
+    save_user_github(user["id"], req.github_handle or "siva2526k-art", repos, evidence)
     return {
         "status": "success",
         "evidence": evidence
@@ -593,58 +619,122 @@ def api_evidence_rescan(user: Dict[str, Any] = Depends(get_current_user)):
 # 12. DEMO SEED LOADER (1-Click Rohan Sharma Profile)
 # ==========================================
 @app.post("/api/demo/load")
-def api_load_demo_profile(user: Dict[str, Any] = Depends(get_current_user)):
-    """Pre-loads the complete standard Rohan Sharma candidate flow."""
+async def api_load_demo_profile(
+    request: Request,
+    user: Dict[str, Any] = Depends(get_current_user)
+):
+    """Pre-loads the complete standard Sivabalan T or Rohan Sharma candidate flow."""
+    profile_type = "rohan"
+    try:
+        body = await request.json()
+        if body and body.get("profile"):
+            profile_type = body.get("profile").lower()
+    except Exception:
+        pass
+    
+    if "siva" in user.get("email", "").lower() or profile_type == "sivabalan":
+        profile_type = "sivabalan"
+
     # 1. Accept consent
     record_consent(user["id"], True)
     
-    # 2. Load Resume
-    demo_resume = get_demo_resume_data()
-    save_user_resume_data(user["id"], demo_resume["filename"], demo_resume)
-    
-    # 3. Load GitHub
-    demo_repos = get_demo_repositories()
-    selected = [r["name"] for r in demo_repos if r.get("selected_by_default")]
-    evidence = evaluate_selected_repositories(selected, demo_resume["extracted_skills"])
-    save_user_github(user["id"], "rohan-sharma-dev", selected, evidence)
-    
-    # 4. Self-Assessments
-    self_map = {
-        "Python": "Advanced",
-        "FastAPI": "Intermediate",
-        "SQL": "Intermediate",
-        "PostgreSQL": "Developing",
-        "Docker": "Developing",
-        "AWS": "Beginner",
-        "Kubernetes": "Beginner",
-        "Git": "Intermediate",
-        "REST APIs": "Intermediate"
-    }
-    
-    # 5. Populate Evidence
-    matrix = aggregate_candidate_evidence_matrix(
-        claimed_skills=demo_resume["extracted_skills"],
-        github_findings=evidence["skills_evidence"],
-        self_assessments=self_map,
-        assessment_scores={"Python": 9, "FastAPI": 8, "Docker": 6, "PostgreSQL": 7}
-    )
-    
-    for item in matrix:
-        save_user_skill_evidence(
-            user_id=user["id"],
-            skill_name=item["skill_name"],
-            self_level=item["self_declared_level"],
-            status=item["evidence_status"],
-            final_level=item["final_level"],
-            confidence=item["confidence"],
-            evidence=item
+    if profile_type == "sivabalan":
+        demo_resume = get_sivabalan_resume_data()
+        save_user_resume_data(user["id"], demo_resume["filename"], demo_resume)
+        
+        demo_repos = get_sivabalan_repositories()
+        selected = ["hackatronix2.0", "SENTINEL", "careerlattice-ai"]
+        evidence = evaluate_selected_repositories(selected, demo_resume["extracted_skills"])
+        save_user_github(user["id"], "siva2526k-art", selected, evidence)
+        
+        self_map = {
+            "Python": "Advanced",
+            "FastAPI": "Advanced",
+            "React": "Intermediate",
+            "Docker": "Intermediate",
+            "ChromaDB": "Advanced",
+            "Ollama": "Advanced",
+            "DeepSeek-R1": "Advanced",
+            "PyTorch": "Intermediate",
+            "Zero-Trust": "Advanced",
+            "Wazuh": "Advanced",
+            "MITRE ATT&CK": "Advanced",
+            "TypeScript": "Intermediate",
+            "WebSockets": "Advanced",
+            "Git": "Advanced",
+            "Linux": "Advanced",
+            "SQL": "Intermediate",
+            "REST APIs": "Advanced"
+        }
+        
+        matrix = aggregate_candidate_evidence_matrix(
+            claimed_skills=demo_resume["extracted_skills"],
+            github_findings=evidence["skills_evidence"],
+            self_assessments=self_map,
+            assessment_scores={"Python": 10, "FastAPI": 9, "Zero-Trust": 10, "ChromaDB": 9, "Docker": 8}
         )
         
-    return {
-        "status": "success",
-        "message": "Demo profile loaded successfully.",
-        "demo_user": "Rohan Sharma"
-    }
+        for item in matrix:
+            save_user_skill_evidence(
+                user_id=user["id"],
+                skill_name=item["skill_name"],
+                self_level=item["self_declared_level"],
+                status=item["evidence_status"],
+                final_level=item["final_level"],
+                confidence=item["confidence"],
+                evidence=item
+            )
+            
+        return {
+            "status": "success",
+            "message": "Sivabalan T candidate pipeline loaded successfully.",
+            "demo_user": "Sivabalan T"
+        }
+    else:
+        # Standard Rohan Sharma flow
+        demo_resume = get_demo_resume_data()
+        save_user_resume_data(user["id"], demo_resume["filename"], demo_resume)
+        
+        demo_repos = get_demo_repositories()
+        selected = [r["name"] for r in demo_repos if r.get("selected_by_default")]
+        evidence = evaluate_selected_repositories(selected, demo_resume["extracted_skills"])
+        save_user_github(user["id"], "rohan-sharma-dev", selected, evidence)
+        
+        self_map = {
+            "Python": "Advanced",
+            "FastAPI": "Intermediate",
+            "SQL": "Intermediate",
+            "PostgreSQL": "Developing",
+            "Docker": "Developing",
+            "AWS": "Beginner",
+            "Kubernetes": "Beginner",
+            "Git": "Intermediate",
+            "REST APIs": "Intermediate"
+        }
+        
+        matrix = aggregate_candidate_evidence_matrix(
+            claimed_skills=demo_resume["extracted_skills"],
+            github_findings=evidence["skills_evidence"],
+            self_assessments=self_map,
+            assessment_scores={"Python": 9, "FastAPI": 8, "Docker": 6, "PostgreSQL": 7}
+        )
+        
+        for item in matrix:
+            save_user_skill_evidence(
+                user_id=user["id"],
+                skill_name=item["skill_name"],
+                self_level=item["self_declared_level"],
+                status=item["evidence_status"],
+                final_level=item["final_level"],
+                confidence=item["confidence"],
+                evidence=item
+            )
+            
+        return {
+            "status": "success",
+            "message": "Demo profile loaded successfully.",
+            "demo_user": "Rohan Sharma"
+        }
 
 # Static file serving (Root index.html)
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent

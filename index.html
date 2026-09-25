@@ -621,8 +621,11 @@
       <button class="btn btn-secondary" id="btnLogout" onclick="handleLogout()" style="font-size: 0.75rem; padding: 6px 14px; display: none;">
         Logout
       </button>
+      <button class="btn btn-primary" id="btnSivaDemo" onclick="loadSivabalanDemo()" style="font-size: 0.75rem; padding: 6px 14px; background: linear-gradient(135deg, #06B6D4, #3B82F6);">
+        ⚡ 1-Click Demo (Sivabalan T)
+      </button>
       <button class="btn btn-ghost" id="btnQuickDemo" onclick="loadStandardDemo()" style="font-size: 0.75rem; padding: 6px 14px;">
-        ⚡ 1-Click Demo (Rohan Sharma)
+        Demo (Rohan)
       </button>
       <button class="btn btn-secondary" id="btnNavAuth" onclick="navigateTo('screenAuth')" style="font-size: 0.75rem; padding: 6px 14px;">
         Account
@@ -716,9 +719,12 @@
             </button>
           </form>
 
-          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); text-align: center;">
-            <button class="btn btn-ghost" onclick="fillDemoCredentials()" style="width: 100%; font-size: 0.8rem;">
-              Fill Standard Demo Credentials (rohan@careerlattice.ai)
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+            <button type="button" class="btn btn-primary" onclick="fillSivaCredentials()" style="width: 100%; font-size: 0.8rem; background: linear-gradient(135deg, #06B6D4, #3B82F6);">
+              Fill Sivabalan T Credentials (sivabalant.official@gmail.com)
+            </button>
+            <button type="button" class="btn btn-ghost" onclick="fillDemoCredentials()" style="width: 100%; font-size: 0.8rem;">
+              Fill Rohan Sharma Credentials (rohan@careerlattice.ai)
             </button>
           </div>
         </div>
@@ -780,12 +786,17 @@
             <input type="file" id="resumeFileInput" accept=".pdf" style="display: none;" onchange="handleResumeFileSelected(this.files[0])">
           </div>
 
-          <!-- Sample Resume Quick Button -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Don't have a PDF ready?</span>
-            <button class="btn btn-ghost" onclick="loadSampleResume()" style="font-size: 0.8rem;">
-              ⚡ Load Sample Resume (Rohan Sharma - CS/Backend)
-            </button>
+          <!-- Sample Resume Quick Buttons -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Quick preset profiles:</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="loadSivabalanResume()" style="font-size: 0.8rem; background: linear-gradient(135deg, #06B6D4, #3B82F6);">
+                ⚡ Load Sivabalan T Resume (AI & SOC Architect)
+              </button>
+              <button type="button" class="btn btn-ghost" onclick="loadSampleResume()" style="font-size: 0.8rem;">
+                Load Rohan Sharma (Backend)
+              </button>
+            </div>
           </div>
 
           <!-- Extraction Results Area -->
@@ -832,8 +843,8 @@
 
           <!-- Handle Input Form -->
           <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-            <input type="text" class="form-input" id="githubHandleInput" placeholder="GitHub username (e.g. rohan-sharma-dev)" value="rohan-sharma-dev" style="flex: 1;">
-            <button class="btn btn-primary" onclick="connectGithub()">
+            <input type="text" class="form-input" id="githubHandleInput" placeholder="GitHub username or repository URL (e.g. https://github.com/siva2526k-art/hackatronix2.0)" value="https://github.com/siva2526k-art/hackatronix2.0" style="flex: 1;">
+            <button class="btn btn-primary" id="btnFetchRepos" onclick="connectGithub()">
               Fetch Repositories
             </button>
           </div>
@@ -1242,9 +1253,19 @@
       }
     }
 
+    function fillSivaCredentials() {
+      if (document.getElementById('authFullName')) document.getElementById('authFullName').value = 'Sivabalan T';
+      document.getElementById('authEmail').value = 'sivabalant.official@gmail.com';
+      document.getElementById('authPassword').value = 'password123';
+      if (document.getElementById('authConfirmPassword')) document.getElementById('authConfirmPassword').value = 'password123';
+      showToast('Credentials Filled', 'Ready to authenticate as Sivabalan T.');
+    }
+
     function fillDemoCredentials() {
+      if (document.getElementById('authFullName')) document.getElementById('authFullName').value = 'Rohan Sharma';
       document.getElementById('authEmail').value = 'rohan@careerlattice.ai';
       document.getElementById('authPassword').value = 'password123';
+      if (document.getElementById('authConfirmPassword')) document.getElementById('authConfirmPassword').value = 'password123';
       showToast('Demo Credentials Filled', 'Ready to log in as Rohan Sharma.');
     }
 
@@ -1390,14 +1411,20 @@
       const sample = {
         name: "Rohan Sharma",
         email: "rohan@careerlattice.ai",
-        education: "B.Tech Computer Science (2021-2025)",
+        education: "B.Tech Computer Science • Tier-3 Institute (2021-2025)",
         extracted_skills: ["Python", "FastAPI", "PostgreSQL", "Docker", "Git", "REST APIs", "AWS", "Kubernetes"]
       };
       state.resumeData = sample;
-      state.extractedSkills = sample.extracted_skills;
+      state.extractedSkills = [...sample.extracted_skills];
+      state.githubHandle = "rohan-sharma-dev";
+      document.getElementById('resumeCandName').innerText = sample.name;
+      document.getElementById('resumeCandEdu').innerText = sample.education;
       renderExtractedSkills();
       document.getElementById('resumeResults').style.display = 'block';
       document.getElementById('btnResumeProceed').disabled = false;
+
+      const ghInput = document.getElementById('githubHandleInput');
+      if (ghInput) ghInput.value = 'rohan-sharma-dev';
 
       // Persist sample claims to database
       if (state.token) {
@@ -1414,7 +1441,51 @@
           console.warn("Resume claims persistence notice:", e);
         }
       }
-      showToast('Sample Resume Loaded', 'Extracted 8 technical skills from sample PDF.');
+      showToast('Sample Resume Loaded', 'Extracted 8 technical skills for Rohan Sharma.');
+    }
+
+    async function loadSivabalanResume() {
+      const siva = {
+        name: "SIVABALAN T",
+        headline: "AI ENGINEER & CYBERSECURITY SYSTEMS ARCHITECT",
+        email: "sivabalant.official@gmail.com",
+        github: "https://github.com/siva2526k-art/hackatronix2.0",
+        education: "B.E. Computer Science & Engineering • Sri Sai Ram Engineering College (Expected 2027)",
+        extracted_skills: [
+          "Python", "FastAPI", "React", "Docker", "ChromaDB", "Ollama",
+          "DeepSeek-R1", "PyTorch", "Zero-Trust", "Wazuh", "MITRE ATT&CK",
+          "TypeScript", "WebSockets", "Git", "Linux", "SQL", "REST APIs"
+        ]
+      };
+      state.resumeData = siva;
+      state.extractedSkills = [...siva.extracted_skills];
+      state.githubHandle = "siva2526k-art";
+      state.selectedRepos = ["hackatronix2.0", "SENTINEL", "careerlattice-ai"];
+
+      document.getElementById('resumeCandName').innerText = siva.name;
+      document.getElementById('resumeCandEdu').innerText = siva.education;
+      renderExtractedSkills();
+      document.getElementById('resumeResults').style.display = 'block';
+      document.getElementById('btnResumeProceed').disabled = false;
+
+      const ghInput = document.getElementById('githubHandleInput');
+      if (ghInput) ghInput.value = siva.github;
+
+      if (state.token) {
+        try {
+          await fetch(`${API_BASE}/api/resumes`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+              filename: "Sivabalan_T_Resume.pdf",
+              claimed_skills: siva.extracted_skills
+            })
+          });
+        } catch (e) {
+          console.warn("Resume claims persistence notice:", e);
+        }
+      }
+      showToast('Sivabalan T Resume Loaded', `Extracted ${siva.extracted_skills.length} AI, SOC & Systems skills.`);
     }
 
     async function handleResumeFileSelected(file) {
@@ -1438,11 +1509,24 @@
 
         if (res.ok) {
           const data = await res.json();
-          state.resumeData = data.extracted_data;
-          state.extractedSkills = data.extracted_data.extracted_skills || [];
+          const ext = data.extracted_data || data;
+          state.resumeData = ext;
+          state.extractedSkills = ext.extracted_skills || [];
+          const candName = ext.candidate_name || "Candidate";
+          document.getElementById('resumeCandName').innerText = candName;
+          const candEdu = (ext.education_signals && ext.education_signals.length > 0)
+            ? ext.education_signals.join(' • ')
+            : "Computer Science & Engineering";
+          document.getElementById('resumeCandEdu').innerText = candEdu;
           renderExtractedSkills();
           document.getElementById('resumeResults').style.display = 'block';
           document.getElementById('btnResumeProceed').disabled = false;
+
+          const ghInput = document.getElementById('githubHandleInput');
+          if (ghInput && (candName.toLowerCase().includes('siva') || file.name.toLowerCase().includes('siva'))) {
+            ghInput.value = 'https://github.com/siva2526k-art/hackatronix2.0';
+            state.githubHandle = 'siva2526k-art';
+          }
           showToast('Resume Parsed', `Extracted ${state.extractedSkills.length} skills from ${file.name}`);
         } else {
           const err = await res.json();
@@ -1495,6 +1579,10 @@
         }
       }
       navigateTo('screenGithub');
+      const ghInput = document.getElementById('githubHandleInput');
+      if (ghInput && !ghInput.value.trim()) {
+        ghInput.value = 'https://github.com/siva2526k-art/hackatronix2.0';
+      }
       await connectGithub();
     }
 
@@ -1503,55 +1591,234 @@
     // ==========================================
     let demoRepos = [
       {
-        name: "sentinel-backend-api",
-        description: "High-throughput asynchronous FastAPI microservice with PostgreSQL & Docker",
-        language: "Python",
-        stars: 18,
+        name: "hackatronix2.0",
+        full_name: "siva2526k-art/hackatronix2.0",
+        description: "Hackathon project platform & submission system (Hac'KP 2026 Kerala Police Cyberdome finalist)",
+        language: "TypeScript",
+        stars: 3,
         selected: true,
-        detected_manifests: ["requirements.txt", "Dockerfile", "docker-compose.yml"]
+        detected_manifests: ["package.json", "tsconfig.json"]
       },
       {
-        name: "careerlattice-core",
-        description: "Evidence-based skill engine with AST inspection and Kahn's DAG sort",
-        language: "Python",
-        stars: 34,
-        selected: true,
-        detected_manifests: ["pyproject.toml", "Dockerfile", "tests/"]
-      },
-      {
-        name: "skillrack-agent",
-        description: "Autonomous code verification pipeline with Python AST parsing",
+        name: "SENTINEL",
+        full_name: "siva2526k-art/SENTINEL",
+        description: "Autonomous Zero-Trust AI SOC Analyst with In-RAM Tokenizer & AST Sandbox",
         language: "Python",
         stars: 12,
         selected: true,
-        detected_manifests: ["main.py", "requirements.txt"]
+        detected_manifests: ["requirements.txt", "Dockerfile"]
       },
       {
-        name: "college-mini-project",
-        description: "Static student portfolio website",
-        language: "HTML",
+        name: "careerlattice-ai",
+        full_name: "siva2526k-art/careerlattice-ai",
+        description: "Smart India Hackathon SE-02: AI Skill-to-Career Readiness Platform",
+        language: "Python",
+        stars: 8,
+        selected: true,
+        detected_manifests: ["requirements.txt", "Dockerfile", "package.json"]
+      },
+      {
+        name: "skillrack-point-updation-demo",
+        full_name: "siva2526k-art/skillrack-point-updation-demo",
+        description: "Automated skill tracking and point aggregation system",
+        language: "Python",
         stars: 2,
         selected: false,
-        detected_manifests: ["index.html"]
+        detected_manifests: ["requirements.txt"]
+      },
+      {
+        name: "sec25cs101",
+        full_name: "siva2526k-art/sec25cs101",
+        description: "Computer Science & Engineering systems coursework and labs",
+        language: "JavaScript",
+        stars: 1,
+        selected: false,
+        detected_manifests: ["package.json"]
       }
     ];
 
     async function connectGithub() {
+      const inputEl = document.getElementById('githubHandleInput');
+      const fetchBtn = document.getElementById('btnFetchRepos');
+      const rawInput = (inputEl?.value || '').trim();
+      const inputVal = rawInput || state.githubHandle || 'https://github.com/siva2526k-art/hackatronix2.0';
+
+      // Parse username and target repository from input (supports raw username, user URL, or repo URL)
+      let clean = inputVal.replace(/^https?:\/\//i, '').replace(/^(www\.)?github\.com\//i, '').replace(/\/$/, '');
+      let username = clean;
+      let targetRepo = null;
+      if (clean.includes('/')) {
+        const parts = clean.split('/');
+        username = parts[0];
+        targetRepo = parts[1].replace('.git', '');
+      }
+      if (!username) username = "siva2526k-art";
+
+      if (fetchBtn) {
+        fetchBtn.disabled = true;
+        fetchBtn.innerText = "Fetching...";
+      }
+
+      showToast('Fetching Repositories', `Querying GitHub API for @${username}...`);
+
+      let fetchedRepos = null;
+
+      // 1. Backend API Call
       if (state.token) {
         try {
-          const res = await fetch(`${API_BASE}/api/github/repos`, { headers: getAuthHeaders() });
+          const res = await fetch(`${API_BASE}/api/github/connect`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ username_or_token: inputVal, is_token: false })
+          });
           if (res.ok) {
             const data = await res.json();
             if (data.repositories && data.repositories.length > 0) {
-              demoRepos = data.repositories;
+              fetchedRepos = data.repositories;
+              if (data.target_repo) targetRepo = data.target_repo;
+              state.githubHandle = data.github_handle || username;
             }
           }
         } catch (e) {
-          console.warn("Fetch github repos notice:", e);
+          console.warn("Backend github connect error:", e);
         }
       }
+
+      // 2. Direct GitHub API Fallback (client-side)
+      if (!fetchedRepos || fetchedRepos.length === 0) {
+        try {
+          const ghRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=30`);
+          if (ghRes.ok) {
+            const ghData = await ghRes.json();
+            if (Array.isArray(ghData) && ghData.length > 0) {
+              fetchedRepos = ghData.map(r => ({
+                name: r.name,
+                full_name: r.full_name,
+                description: r.description || "Public Repository",
+                language: r.language || "Python",
+                stars: r.stargazers_count || 0,
+                fork: r.fork,
+                detected_manifests: (r.language === 'TypeScript' || r.language === 'JavaScript') 
+                  ? ['package.json', 'tsconfig.json'] 
+                  : ['requirements.txt']
+              }));
+            }
+          }
+        } catch (err) {
+          console.warn("Direct GitHub API fetch notice:", err);
+        }
+      }
+
+      // 3. Fallback for Sivabalan T or Rohan
+      if (!fetchedRepos || fetchedRepos.length === 0) {
+        if (username.toLowerCase().includes('siva')) {
+          fetchedRepos = [
+            {
+              name: "hackatronix2.0",
+              full_name: "siva2526k-art/hackatronix2.0",
+              description: "Hackathon project platform & submission system (Hac'KP 2026 Kerala Police Cyberdome finalist)",
+              language: "TypeScript",
+              stars: 3,
+              detected_manifests: ["package.json", "tsconfig.json"]
+            },
+            {
+              name: "SENTINEL",
+              full_name: "siva2526k-art/SENTINEL",
+              description: "Autonomous Zero-Trust AI SOC Analyst with In-RAM Tokenizer & AST Sandbox",
+              language: "Python",
+              stars: 12,
+              detected_manifests: ["requirements.txt", "Dockerfile"]
+            },
+            {
+              name: "careerlattice-ai",
+              full_name: "siva2526k-art/careerlattice-ai",
+              description: "Smart India Hackathon SE-02: AI Skill-to-Career Readiness Platform",
+              language: "Python",
+              stars: 8,
+              detected_manifests: ["requirements.txt", "Dockerfile", "package.json"]
+            },
+            {
+              name: "skillrack-point-updation-demo",
+              full_name: "siva2526k-art/skillrack-point-updation-demo",
+              description: "Automated skill tracking and point aggregation system",
+              language: "Python",
+              stars: 2,
+              detected_manifests: ["requirements.txt"]
+            },
+            {
+              name: "sec25cs101",
+              full_name: "siva2526k-art/sec25cs101",
+              description: "Computer Science & Engineering systems coursework and labs",
+              language: "JavaScript",
+              stars: 1,
+              detected_manifests: ["package.json"]
+            }
+          ];
+        } else {
+          fetchedRepos = [
+            {
+              name: "fastapi-microservice-backend",
+              description: "Asynchronous REST API with PostgreSQL ORM, Pydantic validation & Docker container.",
+              language: "Python",
+              stars: 4,
+              detected_manifests: ["requirements.txt", "Dockerfile"]
+            },
+            {
+              name: "ecommerce-portfolio-api",
+              description: "Flask REST API with SQLite database models and JWT token authentication.",
+              language: "Python",
+              stars: 2,
+              detected_manifests: ["requirements.txt"]
+            },
+            {
+              name: "react-frontend-dashboard",
+              description: "Responsive dashboard SPA built with React and Tailwind CSS.",
+              language: "JavaScript",
+              stars: 1,
+              detected_manifests: ["package.json"]
+            },
+            {
+              name: "college-os-lab-assignments",
+              description: "Operating system CPU scheduling and semaphore practice exercises in C.",
+              language: "C",
+              stars: 0,
+              detected_manifests: ["Makefile"]
+            }
+          ];
+        }
+      }
+
+      demoRepos = fetchedRepos;
+      state.githubHandle = username;
+
+      // Handle targetRepo pre-selection
+      if (targetRepo) {
+        const found = demoRepos.find(r => r.name.toLowerCase() === targetRepo.toLowerCase());
+        if (found) {
+          demoRepos = [found, ...demoRepos.filter(r => r.name.toLowerCase() !== targetRepo.toLowerCase())];
+          state.selectedRepos = [found.name];
+        } else {
+          demoRepos.unshift({
+            name: targetRepo,
+            full_name: `${username}/${targetRepo}`,
+            description: "Specified repository for code inspection",
+            language: "TypeScript",
+            stars: 1,
+            detected_manifests: ["package.json", "tsconfig.json"]
+          });
+          state.selectedRepos = [targetRepo];
+        }
+      } else if (state.selectedRepos.length === 0) {
+        state.selectedRepos = demoRepos.slice(0, 3).map(r => r.name);
+      }
+
+      if (fetchBtn) {
+        fetchBtn.disabled = false;
+        fetchBtn.innerText = "Fetch Repositories";
+      }
+
       initGithubReposList();
-      showToast('GitHub Repositories Retrieved', `Found ${demoRepos.length} candidate repositories.`);
+      showToast('GitHub Repositories Retrieved', `Found ${demoRepos.length} candidate repositories for @${username}. ${targetRepo ? `Selected: ${targetRepo}` : ''}`);
     }
 
     function initGithubReposList() {
@@ -2347,8 +2614,68 @@
     }
 
     // ==========================================
-    // 12. 1-CLICK DEMO (ROHAN SHARMA)
+    // 12. 1-CLICK DEMO (SIVABALAN T & ROHAN SHARMA)
     // ==========================================
+    async function loadSivabalanDemo() {
+      showToast('Loading Sivabalan T Profile', 'Authenticating and populating AI Engineer & SOC Architect candidate pipeline in PostgreSQL...');
+      try {
+        let loginRes = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: "sivabalant.official@gmail.com", password: "password123" })
+        });
+
+        if (!loginRes.ok) {
+          await fetch(`${API_BASE}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: "sivabalant.official@gmail.com",
+              password: "password123",
+              full_name: "Sivabalan T",
+              role: "student"
+            })
+          });
+          loginRes = await fetch(`${API_BASE}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: "sivabalant.official@gmail.com", password: "password123" })
+          });
+        }
+
+        if (loginRes.ok) {
+          const loginData = await loginRes.json();
+          state.token = loginData.token;
+          state.currentUser = loginData.user;
+          localStorage.setItem('cl_token', loginData.token);
+          localStorage.setItem('cl_user', JSON.stringify(loginData.user));
+          updateUserBadge();
+
+          await fetch(`${API_BASE}/api/demo/load`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ profile: "sivabalan" })
+          });
+
+          await loadDashboardFromBackend();
+          showToast('Sivabalan T Loaded', 'AI Engineer & Cybersecurity Systems Architect profile loaded! Review Code Polygraph & Evidence Matrix.');
+          navigateTo('screenDashboard');
+          return;
+        }
+      } catch (e) {
+        console.warn("Siva demo load remote error, running client mode:", e);
+      }
+
+      state.currentUser = { full_name: "Sivabalan T", email: "sivabalant.official@gmail.com" };
+      updateUserBadge();
+      state.consentAccepted = true;
+      document.getElementById('consentCheckbox').checked = true;
+      toggleConsentButton();
+      await loadSivabalanResume();
+      await calculateAndRenderEvidence();
+      showToast('Sivabalan T Loaded', 'AI Engineer & Cybersecurity profile active.');
+    }
+
     async function loadStandardDemo() {
       showToast('Loading Demo Profile', 'Authenticating and populating Rohan Sharma candidate pipeline in PostgreSQL...');
       try {
